@@ -9,7 +9,7 @@ namespace Sunshine
 {
     static public class Extensions
     {
-        static public List<Rect> Substract(this Rect r1, Rect r2)
+        static public List<Rect> Substract(this Rect r1, Rect r2) //just a test 1
         {
             List<Rect> result = new List<Rect>();
             //Left part
