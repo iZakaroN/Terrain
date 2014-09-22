@@ -1,0 +1,174 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{13CDA9EB-5436-42B6-AD8C-556D933A0942}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Sunshine</RootNamespace>
+    <AssemblyName>Sunshine</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="Rendering\Options.cs" />
+    <Compile Include="Rendering\TileBitmap.cs" />
+    <Compile Include="Rendering\TileRender.cs" />
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Extensions.cs" />
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\World\World.csproj">
+      <Project>{458350c4-2635-4570-b34f-4fdd24fc29eb}</Project>
+      <Name>World</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Forest\S1.jpg" />
+    <Resource Include="Images\Ice\S1.jpg" />
+    <Resource Include="Images\Ice\S2.jpg" />
+    <Resource Include="Images\Snow\S1.png" />
+    <Resource Include="Images\Snow\S2.png" />
+    <Resource Include="Images\Snow\S3.jpg" />
+    <Resource Include="Images\Snow\S4.jpg" />
+    <Resource Include="Images\Swamp\S1.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Dirt\C1.jpg" />
+    <Resource Include="Images\Dirt\C2.jpg" />
+    <Resource Include="Images\Dirt\G1.jpg" />
+    <Resource Include="Images\Dirt\S1.jpg" />
+    <Resource Include="Images\Dirt\S2.jpg" />
+    <Resource Include="Images\Dirt\S3.jpg" />
+    <Resource Include="Images\Grass\S0.jpg" />
+    <Resource Include="Images\Grass\S1.jpg" />
+    <Resource Include="Images\Grass\S2.jpg" />
+    <Resource Include="Images\Grass\S3.jpg" />
+    <Resource Include="Images\Rock\C1.jpg" />
+    <Resource Include="Images\Rock\C2.jpg" />
+    <Resource Include="Images\Rock\C3.png" />
+    <Resource Include="Images\Rock\C4.png" />
+    <Resource Include="Images\Rock\C5.jpg" />
+    <Resource Include="Images\Rock\C6.jpg" />
+    <Resource Include="Images\Rock\C7.jpg" />
+    <Resource Include="Images\Rock\R1.jpg" />
+    <Resource Include="Images\Rock\S1.jpg" />
+    <Resource Include="Images\Rock\S2.jpg" />
+    <Resource Include="Images\Rock\S3.png" />
+    <Resource Include="Images\Rock\S4.jpg" />
+    <Resource Include="Images\Rock\S5.jpg" />
+    <Resource Include="Images\Rock\S6.jpg" />
+    <Resource Include="Images\Rock\S7.jpg" />
+    <Resource Include="Images\Rock\S8.jpg" />
+    <Resource Include="Images\Rock\S9.jpg" />
+    <Resource Include="Images\Sand\R1.jpg" />
+    <Resource Include="Images\Sand\R2.jpg" />
+    <Resource Include="Images\Sand\R3.jpg" />
+    <Resource Include="Images\Sand\R4.jpg" />
+    <Resource Include="Images\Sand\R5.jpg" />
+    <Resource Include="Images\Sand\S1.jpg" />
+    <Resource Include="Images\Sand\S2.jpg" />
+    <Resource Include="Images\Sand\S3.jpg" />
+    <Resource Include="Images\Sand\W1.jpg" />
+    <Resource Include="Images\Sand\W2.jpg" />
+    <Resource Include="Images\Sand\W3.jpg" />
+    <Resource Include="Images\Sand\W4.jpg" />
+    <Resource Include="Images\System\X.gif" />
+    <Resource Include="Images\Water\C1.jpg" />
+    <Resource Include="Images\Water\C2.jpg" />
+    <Resource Include="Images\Water\C3.jpg" />
+    <Resource Include="Images\Water\S1.jpg" />
+    <Resource Include="Images\Water\S2.jpg" />
+    <Resource Include="Images\Water\S3.jpg" />
+    <Resource Include="Images\Water\S4.jpg" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
