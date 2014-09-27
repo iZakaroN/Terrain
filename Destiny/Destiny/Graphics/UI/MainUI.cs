@@ -5,34 +5,45 @@ using System.Text;
 using Destiny.Input;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Destiny.Input.Actions;
 
 namespace Destiny.Graphics.UI
 {
-	public class MainUI : BaseUI, IPressedActionElement 
+    public class MainUI : BaseUI, IClickActionElement 
 	{
 		public MainUI(Destiny game)
-			: base(game, @"Font1", @"Texture")
+			: base(game)
 		{
 			game.Controller.Register(this);
-			Enabled = false;
-		}
+			Enabled = true;
+			AutoSizeX = false;
+            TextureName = @"Texture";
+            FontName = @"Font1";
+			AddText("Keys:");
+        }
 
-		List<PressedAction> IActionElement<PressedEvent, PressedAction>.Actions
+		override public void LoadContent()
 		{
-			get
-			{
-				return new List<PressedAction>()
-					{
-						new PressedAction(KeyboardController.GetEvent(Keys.Escape), Exit), 
-						new PressedAction(KeyboardController.GetEvent(Keys.F2), Switch), 
-					};
-			}
-		}
+			base.LoadContent();
+			Size.X = Device.Viewport.Width;
+		} 
 
-		public void Switch(GameTime gt, PressedEvent e)
+        List<ClickAction> IActionElement<ClickEvent, ClickAction>.Actions
+        {
+            get
+            {
+                return new List<ClickAction>()
+					{
+						new ClickAction(KeyboardController.GetEvent(Keys.Escape), Exit), 
+						new ClickAction(KeyboardController.GetEvent(Keys.F1), Switch), 
+					};
+            }
+        }
+
+        public void Switch(GameTime gt, ClickEvent e)
 		{ Enabled = !Enabled; }
 
-		public void Exit(GameTime gt, PressedEvent e)
+        public void Exit(GameTime gt, ClickEvent e)
 		{ Game.Exit(); }
 
 	}

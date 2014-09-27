@@ -62,7 +62,7 @@ namespace Destiny.Graphics.World
 
 		void SetUpVertices()
 		{
-			//SetupCubeHeightFieldTerrain();
+			SetupCubeHeightFieldTerrain();
 			/*			_dimension._rootVector = new OctagonalVector(0, 0, 0);
 						_dimension._root = new Octant(0, new Octant(1, new Cube(_cube_lava)));
 						_dimension._depth = 2;*/
@@ -130,6 +130,7 @@ namespace Destiny.Graphics.World
 
 		override public void LoadContent()
 		{
+			base.LoadContent();
 			_texture = Content.Load<Texture2D>(@"Textures\terrain");
 
 			_terrainTextures.Add(new TextureTile(_texture, 0, 0));//0
@@ -156,8 +157,9 @@ namespace Destiny.Graphics.World
 			Buffers.LoadContent();
 		}
 
-		override public void Draw(GameTime gameTime)
+		public override void Draw(GameTime gameTime)
 		{
+			base.Draw(gameTime);
 			Effect.Parameters["xTexture"].SetValue(_texture);
 			foreach (EffectPass pass in Effect.CurrentTechnique.Passes)
 			{
@@ -173,7 +175,6 @@ namespace Destiny.Graphics.World
 			}*/
 
 
-			base.Draw(gameTime);
 		}
 
 		void DrawOctant(Octant octant, List<int> path)

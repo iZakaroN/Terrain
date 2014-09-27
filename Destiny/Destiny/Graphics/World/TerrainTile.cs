@@ -69,6 +69,7 @@ namespace Destiny.Graphics.World
 
 		override public void LoadContent()
 		{
+			base.LoadContent();
 			_textureSnow = Content.Load<Texture2D>(@"Textures\snow");
 			_textureRock = Content.Load<Texture2D>(@"Textures\rock");
 			_textureGras = Content.Load<Texture2D>(@"Textures\grass");
@@ -83,16 +84,15 @@ namespace Destiny.Graphics.World
 			Buffers.LoadContent();
 		}
 
-		override public void Draw(GameTime gameTime)
+		public override void Draw(GameTime gameTime)
 		{
+			base.Draw(gameTime);
 			Effect.Parameters["xTexture"].SetValue(_textureRock);
 			foreach (EffectPass pass in Effect.CurrentTechnique.Passes)
 			{
 				pass.Apply();
 				Buffers.Draw(gameTime);
 			}
-
-			base.Draw(gameTime);
 		}
 
 	}

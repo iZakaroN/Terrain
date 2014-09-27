@@ -20,11 +20,6 @@ namespace Destiny
 
         public VisualElement(Destiny game)
         {
-            Initialize(game);
-        }
-
-        public virtual void Initialize(Destiny game)
-        {
             Game = game;
         }
 
@@ -33,31 +28,24 @@ namespace Destiny
         public ContentManager Content { get { return Game.Content; } }
 		public Effect Effect { get { return Game.Effect; } }
 
-        virtual public void LoadContent()
+		public virtual void LoadContent()
         {
 			Childs.ForEach(vo => vo.LoadContent());
 		}
 
-        virtual public void UnloadContent()
+		public virtual void UnloadContent()
         {
 			Childs.ForEach(vo => vo.UnloadContent());
 		}
 
-        virtual public void Update(GameTime gameTime)
+		public virtual void Update(GameTime gameTime)
         {
 			Childs.ForEach(vo => vo.Update(gameTime));
 		}
 
-        virtual public void Draw(GameTime gameTime)
+		public virtual void Draw(GameTime gameTime)
         {
             Childs.ForEach(vo => vo.Draw(gameTime));
         }
-
-        /*virtual public void Draw()
-		{
-			Childs.ForEach(vo => vo.Draw());
-		}*/
-
-
     }
 }

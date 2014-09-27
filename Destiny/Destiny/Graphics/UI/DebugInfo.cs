@@ -12,21 +12,26 @@ namespace Destiny.Graphics.UI
 	public class DebugInfo : BaseUI, IClickActionElement 
 	{
 		public DebugInfo(Destiny game)
-			: base(game, @"Font1", null)
+			: base(game)
 		{
 			game.Controller.Register(this);
 			Enabled = false;
-			AddText("FPS: {0}", GetFPS);
+            TextureName = @"Texture";
+            FontName = @"Font1";
+            Position = new Vector2(0, 40);
+            Size = new Vector2(200, 500);
+            AddText("FPS: {0}", GetFPS);
             AddText("Solid: {0}", GetSolidEnabled);
             AddText("Culling: {0}", GetCullEnabled);
         }
 
         TimeSpan ElapsedGameTime = TimeSpan.FromSeconds(1);
-        override public void Draw(GameTime gameTime)
-        {
-            ElapsedGameTime = gameTime.ElapsedGameTime;
-            base.Draw(gameTime);
-        }
+
+		public override void Draw(GameTime gameTime)
+		{
+			base.Draw(gameTime);
+			ElapsedGameTime = gameTime.ElapsedGameTime;
+		}
 
 		private object GetFPS()
 		{
@@ -49,7 +54,7 @@ namespace Destiny.Graphics.UI
 			{
                 return new List<ClickAction>()
 					{
-						new ClickAction(KeyboardController.GetEvent(Keys.F1), Switch), 
+						new ClickAction(KeyboardController.GetEvent(Keys.F2), Switch), 
 					};
 			}
 		}

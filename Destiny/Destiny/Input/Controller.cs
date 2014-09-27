@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Destiny.Extensions;
 using System.Collections.Concurrent;
+using Destiny.Input.Actions;
 
 namespace Destiny.Input
 {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 
-namespace Destiny.Input
+namespace Destiny.Input.Actions
 {
     public class PressedAction : ControllerAction<PressedEvent>
     {

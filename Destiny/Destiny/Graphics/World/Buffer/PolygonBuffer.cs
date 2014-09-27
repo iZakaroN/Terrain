@@ -32,7 +32,7 @@ namespace Destiny.Graphics.World
 		}
 	}
 
-	public class PolygonBuffer : VisualElement
+	public class PolygonBuffer : VisualElement, IDisposable
 	{
 		public enum Mode
 		{
@@ -205,6 +205,7 @@ namespace Destiny.Graphics.World
 
 		override public void LoadContent()
 		{
+			base.LoadContent();
 			//var vertexCount = PolygonCount * PolygonVertexCount;
 			//var indexCount = PolygonCount * PolygonIndexCount;
 			if (Buffered)
@@ -222,8 +223,9 @@ namespace Destiny.Graphics.World
 			//			_texture = new TextureTile(Content.Load<Texture2D>(@"Textures\terrain"), 4, 2);
 
 		}
-		override public void Draw(GameTime gameTime)
+		public override void Draw(GameTime gameTime)
 		{
+			base.Draw(gameTime);
 			if (Buffered)
 			{
 				Device.Indices = _indexBuffer;
@@ -236,8 +238,23 @@ namespace Destiny.Graphics.World
 				else
 					Device.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, Vertices, 0, MaxPolygonCount * PolygonVertexCount, Indices, UsedRegions[i].Low * PolygonIndexCount, UsedRegions[i].Count * PolygonPrimitiveCount);
 			}
-			base.Draw(gameTime);
 		}
 
+        #region Dispose
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+		        _vertexBuffer.Dispose();
+                _indexBuffer.Dispose();
+            }
+        }
+        #endregion Dispose
 	}
 }

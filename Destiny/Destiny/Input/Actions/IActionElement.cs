@@ -5,7 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Destiny.Input.Actions;
 
-namespace Destiny.Input
+namespace Destiny.Input.Actions
 {
     public interface IActionElement
     {

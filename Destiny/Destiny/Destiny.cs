@@ -109,7 +109,7 @@ namespace Destiny
 
             Effect.CurrentTechnique = Effect.Techniques["Textured"];
             //			Effect.CurrentTechnique = Effect.Techniques["ColoredNoShading"];
-            Camera.Draw(gameTime);
+            //Camera.Draw(gameTime);
             Effect.Parameters["xEnableLighting"].SetValue(true);
             //Effect.Parameters["sampler"].SetValue( = SamplerState.PointClamp;
             Vector3 lightDirection = new Vector3(-10f, -10f, -10f);

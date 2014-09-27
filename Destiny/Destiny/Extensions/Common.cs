@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Destiny.Extensions
 {
-    public class ExceptionHelper
+    static public class ExceptionHelper
     {
         public static Exception Throw(Exception e, string message, params object[] p)
         {
@@ -16,5 +16,13 @@ namespace Destiny.Extensions
         {
             return new Exception(string.Format(message, p), null);
         }
+
+		public static void ForEach<T>(this IEnumerable<T> enumeration, Action<T> action)
+		{
+			foreach (T item in enumeration)
+			{
+				action(item);
+			}
+		}
     }
 }

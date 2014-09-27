@@ -20,10 +20,10 @@ namespace Destiny
         //public const int MAX_CUBECOUNT = 40 * 30 * 30;
         //List<Cube> _cubes = new List<Cube>();
 
-		public const int DOWNSCALE = 1;
+		public const int DOWNSCALE = 2;
 		public int MapTilesWidth = 1024 / DOWNSCALE;
 		public int MapTilesHeight = 1024 / DOWNSCALE;
-		public int TerrainDepthScale = 400/* * DOWNSCALE*/;
+		public int TerrainDepthScale = 400 * DOWNSCALE;
 
 		VertexDeclaration VertexDeclaration
         {

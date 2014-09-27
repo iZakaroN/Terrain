@@ -36,9 +36,10 @@ namespace Destiny
 		{
 		}
 
-		public override void LoadContent()
+		override public void LoadContent()
 		{
-			projectionMatrix = Matrix.CreatePerspectiveFieldOfView(MathHelper.Pi/3, Device.Viewport.AspectRatio, 0.1f, 1500.0f);
+			base.LoadContent();
+			projectionMatrix = Matrix.CreatePerspectiveFieldOfView(MathHelper.Pi / 3, Device.Viewport.AspectRatio, 0.1f, 1500.0f);
 			CalculateView();
 		}
 
@@ -54,8 +55,9 @@ namespace Destiny
 			viewMatrix = Matrix.CreateLookAt(Position, Position + Forward, LookUp);
 		}
 
-        public override void Draw(GameTime gameTime)
+		public override void Draw(GameTime gameTime)
 		{
+			base.Draw(gameTime);
 			CalculateView();
 			Effect.Parameters["xView"].SetValue(viewMatrix);
 			Effect.Parameters["xProjection"].SetValue(projectionMatrix);

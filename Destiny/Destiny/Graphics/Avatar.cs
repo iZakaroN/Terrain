@@ -6,6 +6,7 @@ using Destiny.Input;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Destiny.Graphics;
+using Destiny.Input.Actions;
 
 namespace Destiny
 {
@@ -174,9 +175,5 @@ namespace Destiny
 
 		#endregion Camera
 
-        public override void Draw(GameTime gameTime)
-		{
-			base.Draw(gameTime);
-		}
 	}
 }

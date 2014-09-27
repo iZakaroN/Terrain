@@ -25,7 +25,7 @@ namespace Sunshine
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, IDisposable
     {
         BackgroundWorker RenderMapWorker = new BackgroundWorker();
         AutoResetEvent RenderEvent = new AutoResetEvent(false);
@@ -307,5 +307,22 @@ namespace Sunshine
         {
             SetMapScale(e.Delta);
         }
+
+        #region Dispose
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                RenderEvent.Dispose();
+                RenderMapWorker.Dispose();
+            }
+        }
+        #endregion Dispose
     }
 }

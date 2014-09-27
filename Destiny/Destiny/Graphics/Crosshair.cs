@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework;
 
 namespace Destiny.Graphics
 {
-	public class Crosshair : VisualElement
+	public class Crosshair : VisualElement, IDisposable
 	{
 		SpriteBatch _spriteBatch;
 		Texture2D _texture;
@@ -19,17 +19,17 @@ namespace Destiny.Graphics
 
 		override public void LoadContent()
 		{
+			base.LoadContent();
 			_spriteBatch = new SpriteBatch(Device);
 			_texture = Content.Load<Texture2D>(@"Textures\Crosshair\crosshair1Small3");
-			
 		}
 
-        override public void Draw(GameTime gameTime)
+		override public void Draw(GameTime gameTime)
 		{
+			base.Draw(gameTime);
 			_spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);//, SamplerState.AnisotropicClamp, DepthStencilState.Default, RasterizerState.CullNone);
 			_spriteBatch.Draw(_texture, Position, null, Color.White, 0, Vector2.Zero, SpriteEffects.None, 0);
 			_spriteBatch.End();
-			base.Draw(gameTime);
 		}
 
 /*		public readonly Vector3[] Crosshair = new Vector3[]
@@ -66,5 +66,21 @@ namespace Destiny.Graphics
 			}
 		}
 
-	}
+        #region Dispose
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _spriteBatch.Dispose();
+                _texture.Dispose();
+            }
+        }
+        #endregion Dispose
+    }
 }

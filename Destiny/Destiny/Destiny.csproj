@@ -107,6 +107,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Graphics\UI\BouncingUI.cs" />
     <Compile Include="Graphics\World\TerrainCube.cs" />
     <Compile Include="Graphics\World\TerrainTile.cs" />
     <Compile Include="Input\Actions\ClickAction.cs" />
