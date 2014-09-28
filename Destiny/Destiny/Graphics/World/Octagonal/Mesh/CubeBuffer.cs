@@ -10,8 +10,6 @@ namespace Destiny.Graphics.World.Octagonal.Mesh
 	{
 		public CubeBuffer(Destiny game, int cubeCount) : base(game, cubeCount, Cube.CUBE_FACE_COUNT, Cube.CUBE_FACE_VERTICES)
 		{
-			var a = new VertexElement(sizeof(float) * 3, VertexElementFormat.Color, VertexElementUsage.Color, 0);
 		}
-
 	}
 }

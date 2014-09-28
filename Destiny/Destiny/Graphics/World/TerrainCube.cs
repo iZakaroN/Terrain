@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Destiny.Graphics.World
 {
@@ -41,28 +42,28 @@ namespace Destiny.Graphics.World
             : base(game)
         {
             Buffers = new GeometryBuffers<CubeBuffer>(game, new CubeBufferFactory());
-        }
+		}
 
 		List<TextureTile> GetTileSet(params int[] tiles)
 		{
 			return tiles.ToList().ConvertAll((tileNum) => _terrainTextures[tileNum]);
 		}
 
-		public virtual void AddCube(Vector3 position)
+		public override void AddCube(Vector3 position)
 		{
 			AddCube(_cube_rock, position);
 		}
 
-		public void AddCube(List<TextureTile> textureSet, Vector3 position)
+		public void AddCube(List<TextureTile> textureSet, Vector3 position, bool addToBuffer = true)
 		{
 			var cube = new Cube(textureSet);
 			var oVector = _dimension.AllocateNode(position, cube);
-			cube.AddToBuffer(Buffers.GetBuffer(), _dimension.ToWorldVector(oVector));
+			//if (addToBuffer)
+				cube.AddToBuffer(Buffers.GetBuffer(), _dimension.ToWorldVector(oVector));
 		}
 
-		void SetUpVertices()
+		void SetZero()
 		{
-			SetupCubeHeightFieldTerrain();
 			/*			_dimension._rootVector = new OctagonalVector(0, 0, 0);
 						_dimension._root = new Octant(0, new Octant(1, new Cube(_cube_lava)));
 						_dimension._depth = 2;*/
@@ -113,9 +114,9 @@ namespace Destiny.Graphics.World
 						GetDepth(HeightFieldTerrain.GetMapTile(x, b))
 						);
 					for (int d = (int)minDepth + 1; d < tileDepth; d++)
-						AddCube(_cube_dirth, new Vector3(x - MapTilesWidth / 2, d, y - MapTilesHeight / 2));
+						AddCube(_cube_dirth, new Vector3(x - MapTilesWidth / 2, d, y - MapTilesHeight / 2), false);
 
-					AddCube(_cube_grass, new Vector3(x - MapTilesWidth / 2, tileDepth, y - MapTilesHeight / 2));
+					AddCube(_cube_grass, new Vector3(x - MapTilesWidth / 2, tileDepth, y - MapTilesHeight / 2), false);
 
 				}
 		}
@@ -132,6 +133,11 @@ namespace Destiny.Graphics.World
 		{
 			base.LoadContent();
 			_texture = Content.Load<Texture2D>(@"Textures\terrain");
+			this.Game.World.DebugUI.Debug("Number of buffers: {0}", () => Buffers.Childs.Count);
+			this.Game.World.DebugUI.Debug("Current Buffer Regions: {0}", () => Buffers.GetBuffer().RegionCount);
+			this.Game.World.DebugUI.Debug("Current Buffer Free Polygons: {0}", () => Buffers.GetBuffer().FreePolygons);
+			this.Game.World.DebugUI.Debug("Mesh: {0}", () => Buffers.GetBuffer().FreePolygons);
+
 
 			_terrainTextures.Add(new TextureTile(_texture, 0, 0));//0
 			_terrainTextures.Add(new TextureTile(_texture, 1, 0));//1
@@ -153,8 +159,10 @@ namespace Destiny.Graphics.World
 			_cube_dirth = GetTileSet(TILE_DIRTH, TILE_DIRTH, TILE_DIRTH, TILE_DIRTH, TILE_DIRTH, TILE_DIRTH);
 			_cube_rock = GetTileSet(TILE_ROCK, TILE_ROCK, TILE_ROCK, TILE_ROCK, TILE_ROCK, TILE_ROCK);
 
-			SetUpVertices();
-			Buffers.LoadContent();
+			SetZero();
+			//SetupCubeHeightFieldTerrain();
+			Task.Factory.StartNew(() => SetupCubeHeightFieldTerrain());//.ContinueWith((task) =>
+			//Task.Factory.StartNew(() => Buffers.LoadContent()));
 		}
 
 		public override void Draw(GameTime gameTime)

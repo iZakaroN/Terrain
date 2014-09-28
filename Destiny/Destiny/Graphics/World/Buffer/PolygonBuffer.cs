@@ -10,8 +10,8 @@ namespace Destiny.Graphics.World
 {
 	public class BufferRegion : IComparer<BufferRegion>
 	{
-		public int _low;
-		public int _high;
+		private int _low;
+		private int _high;
 		public BufferRegion(int low, int high)
 		{
 			_low = low;
@@ -41,8 +41,8 @@ namespace Destiny.Graphics.World
 			Auto,
 		};
 
-		bool Auto = false;
-		bool Buffered = true;
+		bool Auto = true;
+		bool Buffered = false;
 		int MaxMeshCount;
 		int MaxPolygonCount;
 
@@ -122,6 +122,15 @@ namespace Destiny.Graphics.World
 		{
 			var position = AllocateFreePolygonsPosition(MeshPolygons);
 			SetPolygons(vertices, indices, position);
+
+			if (IsFull && Auto)
+			{
+				LoadBufferContent();
+				Buffered = true;
+				Vertices = null;
+				Indices = null;
+
+			}
 			return position;
 		}
 
@@ -196,44 +205,48 @@ namespace Destiny.Graphics.World
 			return UsedRegions.BinarySearch(region, region);
 		}
 
-		public bool IsFull { get { return UsedRegions.Count > 0 && UsedRegions.Last().High >= MaxPolygonCount; } }
+		public int RegionCount {
+			get { return UsedRegions.Count; }
+		}
+
+		public int FreePolygons { 
+			get { 
+				return UsedRegions.Aggregate(MaxPolygonCount, (maxPolygons, region) => maxPolygons - region.Count); 
+			} 
+		}
+
+
+		public bool IsFull { get { return UsedRegions.Count ==1 /*> 0*/ && UsedRegions.Last().High >= MaxPolygonCount; } }
 
 		VertexDeclaration VertexDeclaration
 		{
 			get { return VertexPositionNormalTexture.VertexDeclaration; }
 		}
 
-		override public void LoadContent()
+		private void LoadBufferContent()
 		{
-			base.LoadContent();
-			//var vertexCount = PolygonCount * PolygonVertexCount;
-			//var indexCount = PolygonCount * PolygonIndexCount;
-			if (Buffered)
-			{
-				var vertexCount = MaxPolygonCount * PolygonVertexCount;
-				var indexCount = MaxPolygonCount * PolygonIndexCount;
+			var vertexCount = MaxPolygonCount * PolygonVertexCount;
+			var indexCount = MaxPolygonCount * PolygonIndexCount;
 
-				_vertexBuffer = new VertexBuffer(Device, VertexDeclaration, vertexCount, BufferUsage.None);
-				_vertexBuffer.SetData(Vertices, 0, vertexCount);
+			_vertexBuffer = new VertexBuffer(Device, VertexDeclaration, vertexCount, BufferUsage.None);
+			_vertexBuffer.SetData(Vertices, 0, vertexCount);
 
-				_indexBuffer = new IndexBuffer(Device, typeof(int), indexCount, BufferUsage.None);
-				_indexBuffer.SetData(Indices, 0, indexCount);
-			}
-
-			//			_texture = new TextureTile(Content.Load<Texture2D>(@"Textures\terrain"), 4, 2);
-
+			_indexBuffer = new IndexBuffer(Device, typeof(int), indexCount, BufferUsage.None);
+			_indexBuffer.SetData(Indices, 0, indexCount);
 		}
+
 		public override void Draw(GameTime gameTime)
 		{
 			base.Draw(gameTime);
-			if (Buffered)
+			bool buffered = Buffered;
+			if (buffered)
 			{
 				Device.Indices = _indexBuffer;
 				Device.SetVertexBuffer(_vertexBuffer);
 			}
 			for (int i = 0; i < UsedRegions.Count; i++)
 			{
-				if (Buffered)
+				if (buffered)
 					Device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, MaxPolygonCount * PolygonVertexCount, UsedRegions[i].Low * PolygonIndexCount, UsedRegions[i].Count * PolygonPrimitiveCount);
 				else
 					Device.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, Vertices, 0, MaxPolygonCount * PolygonVertexCount, Indices, UsedRegions[i].Low * PolygonIndexCount, UsedRegions[i].Count * PolygonPrimitiveCount);

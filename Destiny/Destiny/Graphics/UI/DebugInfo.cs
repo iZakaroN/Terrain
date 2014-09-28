@@ -18,12 +18,18 @@ namespace Destiny.Graphics.UI
 			Enabled = false;
             TextureName = @"Texture";
             FontName = @"Font1";
-            Position = new Vector2(0, 40);
-            Size = new Vector2(200, 500);
-            AddText("FPS: {0}", GetFPS);
-            AddText("Solid: {0}", GetSolidEnabled);
-            AddText("Culling: {0}", GetCullEnabled);
+			Initialize();
         }
+
+		private void Initialize()
+		{
+			Position = new Vector2(0, 40);
+			Size = new Vector2(200, 500);
+
+			AddText("FPS: {0}", GetFPS);
+			AddText("Solid: {0}", GetSolidEnabled);
+			AddText("Culling: {0}", GetCullEnabled);
+		}
 
         TimeSpan ElapsedGameTime = TimeSpan.FromSeconds(1);
 
@@ -62,5 +68,12 @@ namespace Destiny.Graphics.UI
 		public void Switch(GameTime gt, ClickEvent e)
 		{ Enabled = !Enabled; }
 
+
+		internal void Debug(string text, params Func<object>[] arguments)
+		{
+			AddText(text, arguments);
+			//UnloadContent();
+			//LoadContent();
+		}
 	}
 }

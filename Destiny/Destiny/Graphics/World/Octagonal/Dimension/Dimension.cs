@@ -73,9 +73,7 @@ namespace Destiny.Graphics.World.Octagonal.Dimension
 					return new OctagonalVector(0, 0, 0);
 				}
 
-				AllocateLowerBoundRoot(v);
-
-				OctagonalVector dV = v - _rootVector;
+				OctagonalVector dV = AllocateLowerBoundRoot(v);
 
 				AllocateVector(dV.CalculatePath(), node);
 
@@ -83,7 +81,7 @@ namespace Destiny.Graphics.World.Octagonal.Dimension
 			}
 		}
 
-		private void AllocateLowerBoundRoot(OctagonalVector v)
+		private OctagonalVector AllocateLowerBoundRoot(OctagonalVector v)
 		{
 			OctagonalVector dV = v - _rootVector;
 
@@ -103,6 +101,7 @@ namespace Destiny.Graphics.World.Octagonal.Dimension
 				_rootVector -= oldRoot << _depth;
 				_depth += oldRootPathLength;
 			}
+			return dV;
 		}
 		void AllocateVector(List<int> vPath, OctantNode node)
 		{

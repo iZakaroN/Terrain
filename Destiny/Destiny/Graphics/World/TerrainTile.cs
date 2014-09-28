@@ -29,17 +29,18 @@ namespace Destiny.Graphics.World
 			: base(game)
 		{
 			Buffers = new GeometryBuffers<TileBuffer>(game, new TileBufferFactory());
+			this.Game.World.DebugUI.AddText("Number of buffers {0}", GetBuffersCount);
+		}
+
+		private object GetBuffersCount()
+		{
+			return Buffers.Childs.Count;
 		}
 
 		private void AddTile(TextureTile texture, MapTile[] tiles, Vector3 vector3)
 		{
 			var tile = new Tile(texture, tiles, TerrainDepthScale);
 			tile.AddToBuffer(Buffers.GetBuffer(), vector3);
-		}
-
-		void SetUpVertices()
-		{
-			SetupTileHeightFieldTerrain();
 		}
 
 		private void SetupTileHeightFieldTerrain()
@@ -80,7 +81,7 @@ namespace Destiny.Graphics.World
 			_terrainTextures.Add(new TextureTile(_textureGras, _textureGras.Bounds.Width / 16, 0, 0));
 			_terrainTextures.Add(new TextureTile(_textureSand, _textureSand.Bounds.Width / 16, 0, 0));
 
-			SetUpVertices();
+			SetupTileHeightFieldTerrain();
 			Buffers.LoadContent();
 		}
 

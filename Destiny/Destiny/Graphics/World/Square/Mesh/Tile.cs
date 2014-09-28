@@ -48,9 +48,8 @@ namespace Destiny.Graphics.World.Square.Mesh
 		{
 			FaceTexture = faceTextures;
 			for (int i = 0; i < TILE_FACE_VERTICES; i++)
-				Vectors[i].Y = GetDepth(tiles[i], depthScale);
-			for (int i = 0; i < TILE_FACE_VERTICES; i++)
 			{
+				Vectors[i].Y = GetDepth(tiles[i], depthScale);
 				Normals[i] = new Vector3((float)(tiles[i].Data.A - tiles[i].Data.C) / depthScale, (float)(tiles[i].Data.B - tiles[i].Data.D) / depthScale, 2);
 				Normals[i].Normalize();
 			}
