@@ -8,15 +8,11 @@ using Microsoft.Xna.Framework;
 
 namespace Destiny
 {
-    abstract public class VisualElement
+    abstract public class VisualElement : IDisposable
     {
         public Destiny Game;
 
 		readonly public List<VisualElement> Childs = new List<VisualElement>();
-
-        public VisualElement()
-        {
-        }
 
         public VisualElement(Destiny game)
         {
@@ -47,5 +43,20 @@ namespace Destiny
         {
             Childs.ForEach(vo => vo.Draw(gameTime));
         }
-    }
+		#region Dispose
+		public void Dispose()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		protected void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				UnloadContent();
+			}
+		}
+		#endregion Dispose
+	}
 }

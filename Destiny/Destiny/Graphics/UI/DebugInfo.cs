@@ -9,13 +9,12 @@ using Destiny.Input.Actions;
 
 namespace Destiny.Graphics.UI
 {
-	public class DebugInfo : BaseUI, IClickActionElement 
+	public class DebugInfo : BaseUI
 	{
 		public DebugInfo(Destiny game)
 			: base(game)
 		{
-			game.Controller.Register(this);
-			Enabled = false;
+			Enabled = true;
             TextureName = @"Texture";
             FontName = @"Font1";
 			Initialize();
@@ -53,20 +52,6 @@ namespace Destiny.Graphics.UI
         {
             return Game.SolidEnabled;
         }
-
-        List<ClickAction> IActionElement<ClickEvent, ClickAction>.Actions
-		{
-			get
-			{
-                return new List<ClickAction>()
-					{
-						new ClickAction(KeyboardController.GetEvent(Keys.F2), Switch), 
-					};
-			}
-		}
-
-		public void Switch(GameTime gt, ClickEvent e)
-		{ Enabled = !Enabled; }
 
 
 		internal void Debug(string text, params Func<object>[] arguments)

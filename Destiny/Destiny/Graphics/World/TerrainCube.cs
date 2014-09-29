@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Destiny.Graphics.World
 {
-	class TerrainCube : Terrain
+	class TerrainCube : Terrain<CubeBuffer>
 	{
 		public const int TILE_GRASS = 0;
 		public const int TILE_ROCK = 1;
@@ -36,12 +36,9 @@ namespace Destiny.Graphics.World
 		public List<TextureTile> _cube_dirth;
 		public List<TextureTile> _cube_rock;
 
-		GeometryBuffers<CubeBuffer> Buffers;
-
 		public TerrainCube(Destiny game)
-            : base(game)
+			: base(game, new GeometryBuffers<CubeBuffer>(game, new CubeBufferFactory()))
         {
-            Buffers = new GeometryBuffers<CubeBuffer>(game, new CubeBufferFactory());
 		}
 
 		List<TextureTile> GetTileSet(params int[] tiles)
@@ -131,13 +128,7 @@ namespace Destiny.Graphics.World
 
 		override public void LoadContent()
 		{
-			base.LoadContent();
 			_texture = Content.Load<Texture2D>(@"Textures\terrain");
-			this.Game.World.DebugUI.Debug("Number of buffers: {0}", () => Buffers.Childs.Count);
-			this.Game.World.DebugUI.Debug("Current Buffer Regions: {0}", () => Buffers.GetBuffer().RegionCount);
-			this.Game.World.DebugUI.Debug("Current Buffer Free Polygons: {0}", () => Buffers.GetBuffer().FreePolygons);
-			this.Game.World.DebugUI.Debug("Mesh: {0}", () => Buffers.GetBuffer().FreePolygons);
-
 
 			_terrainTextures.Add(new TextureTile(_texture, 0, 0));//0
 			_terrainTextures.Add(new TextureTile(_texture, 1, 0));//1
@@ -158,11 +149,14 @@ namespace Destiny.Graphics.World
 			_cube_lava = GetTileSet(TILE_LAVA, TILE_LAVA, TILE_LAVA, TILE_LAVA, TILE_LAVA, TILE_LAVA);
 			_cube_dirth = GetTileSet(TILE_DIRTH, TILE_DIRTH, TILE_DIRTH, TILE_DIRTH, TILE_DIRTH, TILE_DIRTH);
 			_cube_rock = GetTileSet(TILE_ROCK, TILE_ROCK, TILE_ROCK, TILE_ROCK, TILE_ROCK, TILE_ROCK);
+			base.LoadContent();
 
+		}
+
+		public override void SetpVertices()
+		{
 			SetZero();
-			//SetupCubeHeightFieldTerrain();
-			Task.Factory.StartNew(() => SetupCubeHeightFieldTerrain());//.ContinueWith((task) =>
-			//Task.Factory.StartNew(() => Buffers.LoadContent()));
+			SetupCubeHeightFieldTerrain();
 		}
 
 		public override void Draw(GameTime gameTime)

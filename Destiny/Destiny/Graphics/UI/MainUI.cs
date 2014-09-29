@@ -9,12 +9,20 @@ using Destiny.Input.Actions;
 
 namespace Destiny.Graphics.UI
 {
-    public class MainUI : BaseUI, IClickActionElement 
+    public class MainUI : BaseUI
 	{
+		public BouncingUI BouncingUI;
+		public DebugInfo DebugUI;
+
 		public MainUI(Destiny game)
 			: base(game)
 		{
-			game.Controller.Register(this);
+			BouncingUI = new BouncingUI(game);
+			DebugUI = new DebugInfo(game);
+
+			Childs.Add(BouncingUI);
+			Childs.Add(DebugUI);
+
 			Enabled = true;
 			AutoSizeX = false;
             TextureName = @"Texture";
@@ -28,22 +36,7 @@ namespace Destiny.Graphics.UI
 			Size.X = Device.Viewport.Width;
 		} 
 
-        List<ClickAction> IActionElement<ClickEvent, ClickAction>.Actions
-        {
-            get
-            {
-                return new List<ClickAction>()
-					{
-						new ClickAction(KeyboardController.GetEvent(Keys.Escape), Exit), 
-						new ClickAction(KeyboardController.GetEvent(Keys.F1), Switch), 
-					};
-            }
-        }
-
-        public void Switch(GameTime gt, ClickEvent e)
-		{ Enabled = !Enabled; }
-
-        public void Exit(GameTime gt, ClickEvent e)
+        public void Exit()
 		{ Game.Exit(); }
 
 	}

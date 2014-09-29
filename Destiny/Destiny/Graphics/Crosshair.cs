@@ -32,28 +32,28 @@ namespace Destiny.Graphics
 			_spriteBatch.End();
 		}
 
-/*		public readonly Vector3[] Crosshair = new Vector3[]
-        {
-            new Vector3(-1, -1, -1),
-            new Vector3(1, -1, -1),
-            new Vector3(-1, 1, -1),
-            new Vector3(1, 1, -1),
+		/*		public readonly Vector3[] Crosshair = new Vector3[]
+				{
+					new Vector3(-1, -1, -1),
+					new Vector3(1, -1, -1),
+					new Vector3(-1, 1, -1),
+					new Vector3(1, 1, -1),
 
-            new Vector3(-1, -1, 1),
-            new Vector3(1, -1, 1),
-            new Vector3(-1, 1, 1),
-            new Vector3(1, 1, 1),
-        };*/
+					new Vector3(-1, -1, 1),
+					new Vector3(1, -1, 1),
+					new Vector3(-1, 1, 1),
+					new Vector3(1, 1, 1),
+				};*/
 
 		Rectangle Position
 		{
 			get
 			{
-/*				return new Vector2(
-					(Game.Window.ClientBounds.Width - _texture.Width ) / 2,
-					(Game.Window.ClientBounds.Height - _texture.Height) / 2);*/
+				/*				return new Vector2(
+									(Game.Window.ClientBounds.Width - _texture.Width ) / 2,
+									(Game.Window.ClientBounds.Height - _texture.Height) / 2);*/
 				var pos = Size;
-				pos.Offset(Game.Window.ClientBounds.Width / 2, Game.Window.ClientBounds.Height/2);
+				pos.Offset(Game.Window.ClientBounds.Width / 2, Game.Window.ClientBounds.Height / 2);
 				return pos;
 			}
 		}
@@ -66,21 +66,11 @@ namespace Destiny.Graphics
 			}
 		}
 
-        #region Dispose
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _spriteBatch.Dispose();
-                _texture.Dispose();
-            }
-        }
-        #endregion Dispose
-    }
+		public override void UnloadContent()
+		{
+			base.UnloadContent();
+			_spriteBatch.Dispose();
+			_texture.Dispose();
+		}
+	}
 }

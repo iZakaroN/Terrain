@@ -6,7 +6,13 @@ using System.Text;
 
 namespace Destiny.Graphics.World
 {
-    class GeometryBuffers<TB> : VisualElement
+	public interface IGeometryBuffers
+	{
+		PolygonBuffer CurrentBuffer { get; }
+		List<VisualElement> Buffers { get; }
+	}
+
+	public class GeometryBuffers<TB> : VisualElement, IGeometryBuffers
         where TB : PolygonBuffer
     {
         IPolygonBufferFactory<TB> BufferFactory;
@@ -14,6 +20,10 @@ namespace Destiny.Graphics.World
         {
             BufferFactory = bufferFactory;
         }
+
+		public PolygonBuffer CurrentBuffer { get { return GetBuffer(); } }
+		public List<VisualElement> Buffers { get { return Childs; } }
+
 
         public TB GetBuffer()
         {

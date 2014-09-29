@@ -12,10 +12,16 @@ namespace Destiny
 	public class Camera : VisualElement
 	{
 
-		public Vector3 Position = new Vector3(0, 0, 0);
+		public Vector3 Position = new Vector3(0, 200, -300);
 
-		public float AngleH = 0;
+		/// <summary>
+		/// Yaw
+		/// </summary>
 		public float AngleV = 0;
+		/// <summary>
+		/// pitch
+		/// </summary>
+		public float AngleH = MathHelper.Pi / 6;
 
 		public Vector3 Forward { get; private set; }
 		public Vector3 Side { get; private set; }
@@ -25,9 +31,9 @@ namespace Destiny
 		Matrix viewMatrix;
 		Matrix projectionMatrix;
 
-		Vector3 VectorH = new Vector3(1, 0, 0);
+		Vector3 VectorH = new Vector3(-1, 0, 0);
 		Vector3 VectorV = new Vector3(0, 1, 0);
-		Vector3 VectorF = new Vector3(0, 0, -1);
+		Vector3 VectorF = new Vector3(0, 0, 1);
 
 
 
@@ -46,7 +52,7 @@ namespace Destiny
 
 		void CalculateView()
 		{
-			Rotation = Quaternion.CreateFromYawPitchRoll(AngleH, AngleV, 0);
+			Rotation = Quaternion.CreateFromYawPitchRoll(AngleV, AngleH, 0);
 
 			Forward = Vector3.Transform(VectorF, Rotation); Forward.Normalize();
 			Side = Vector3.Transform(VectorH, Rotation); Side.Normalize();

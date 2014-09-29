@@ -116,6 +116,7 @@
     <Compile Include="Input\Actions\ContollerAction.cs" />
     <Compile Include="Input\Actions\IActionElement.cs" />
     <Compile Include="Input\Events.cs" />
+    <Compile Include="Input\InputControlMapper.cs" />
     <Compile Include="Input\KeyboardController.cs" />
     <Compile Include="Input\Actions\MotionAction.cs" />
     <Compile Include="Input\MouseController.cs" />

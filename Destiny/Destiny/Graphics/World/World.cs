@@ -10,40 +10,73 @@ namespace Destiny.Graphics.World
 	public class World : VisualElement, IDisposable
 	{
 		public Terrain Terrain;
+		TerrainCube TerrainCube;
+		TerrainTile TerrainTile;
+
 		public MainUI UI;
-		public DebugInfo DebugUI;
-		
 		public Avatar Avatar;
+
+		bool cubicTerrain = false;
 
 		public World(Destiny game) : base(game)
 		{
 
-			Terrain = new TerrainCube(game);
 			UI = new MainUI(game);
-			DebugUI = new DebugInfo(game);
-			Avatar = new Avatar(game);
-
-			Childs.Add(Terrain);
 			Childs.Add(UI);
-			Childs.Add(DebugUI);
-			Childs.Add(Avatar);
-			Childs.Add(new BouncingUI(game));
-		}
-        #region Dispose
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
 
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                UI.Dispose();
-                DebugUI.Dispose();
-            }
-        }
-        #endregion Dispose
+			Avatar = new Avatar(game);
+			Childs.Add(Avatar);
+
+		}
+
+		public override void LoadContent()
+		{
+			base.LoadContent();
+			this.Game.World.UI.DebugUI.Debug("Number of buffers: {0}", () => Terrain.GetBuffers().Buffers.Count);
+			this.Game.World.UI.DebugUI.Debug("Current Buffer Regions: {0}", () => Terrain.GetBuffers().CurrentBuffer.RegionCount);
+			this.Game.World.UI.DebugUI.Debug("Current Buffer Free Polygons: {0}", () => Terrain.GetBuffers().CurrentBuffer.FreePolygons);
+			this.Game.World.UI.DebugUI.Debug("Mesh: {0}", () => Terrain.GetBuffers().CurrentBuffer.FreePolygons);
+			SetActiveTerrain();
+		}
+
+		private void SetActiveTerrain()
+		{
+			if (cubicTerrain)
+				Terrain = GetTerrainCube();
+			else
+				Terrain = GetTerrainTile();
+		}
+
+		private Terrain GetTerrainCube()
+		{
+			if (TerrainCube == null)
+			{
+				TerrainCube = new TerrainCube(Game);
+				TerrainCube.LoadContent();
+			}
+			return TerrainCube;
+		}
+
+		private Terrain GetTerrainTile()
+		{
+			if (TerrainTile == null)
+			{
+				TerrainTile = new TerrainTile(Game);
+				TerrainTile.LoadContent();
+			}
+			return TerrainTile;
+		}
+
+		public void SwitchTerrain()
+		{
+			cubicTerrain = !cubicTerrain;
+			SetActiveTerrain();
+		}
+		
+		public override void Draw(GameTime gameTime)
+		{
+			Terrain.Draw(gameTime);
+			base.Draw(gameTime);
+		}
     }
 }

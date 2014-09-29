@@ -49,7 +49,10 @@ namespace Destiny.Graphics.UI
         {
         }
 
-        public void AddText(string text, params Func<object>[] arguments)
+		public void Switch()
+		{ Enabled = !Enabled; }
+
+		public void AddText(string text, params Func<object>[] arguments)
         {
             _textElements.Add(new TextElement() { Text = text, Arguments = arguments.ToList() });
         }
@@ -171,21 +174,12 @@ namespace Destiny.Graphics.UI
                 });
         }
 
-        #region Dispose
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
 
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                if (_spriteBatch != null) _spriteBatch.Dispose();
-                if (_backgroundTexture != null) _backgroundTexture.Dispose();
-            }
-        }
-        #endregion Dispose
+		public override void UnloadContent()
+		{
+			base.UnloadContent();
+			if (_spriteBatch != null) _spriteBatch.Dispose();
+			if (_backgroundTexture != null) _backgroundTexture.Dispose();
+		}
     }
 }

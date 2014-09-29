@@ -6,10 +6,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Destiny.Graphics.World
 {
-	class TerrainTile : Terrain
+	class TerrainTile : Terrain<TileBuffer>
 	{
 		public const int TILE_SNOW = 0;
 		public const int TILE_ROCK = 1;
@@ -23,18 +24,9 @@ namespace Destiny.Graphics.World
 
 		List<TextureTile> _terrainTextures = new List<TextureTile>();
 
-		GeometryBuffers<TileBuffer> Buffers;
-
 		public TerrainTile(Destiny game)
-			: base(game)
+			: base(game, new GeometryBuffers<TileBuffer>(game, new TileBufferFactory()))
 		{
-			Buffers = new GeometryBuffers<TileBuffer>(game, new TileBufferFactory());
-			this.Game.World.DebugUI.AddText("Number of buffers {0}", GetBuffersCount);
-		}
-
-		private object GetBuffersCount()
-		{
-			return Buffers.Childs.Count;
 		}
 
 		private void AddTile(TextureTile texture, MapTile[] tiles, Vector3 vector3)
@@ -70,7 +62,6 @@ namespace Destiny.Graphics.World
 
 		override public void LoadContent()
 		{
-			base.LoadContent();
 			_textureSnow = Content.Load<Texture2D>(@"Textures\snow");
 			_textureRock = Content.Load<Texture2D>(@"Textures\rock");
 			_textureGras = Content.Load<Texture2D>(@"Textures\grass");
@@ -80,9 +71,12 @@ namespace Destiny.Graphics.World
 			_terrainTextures.Add(new TextureTile(_textureRock, _textureRock.Bounds.Width / 16, 0, 0));
 			_terrainTextures.Add(new TextureTile(_textureGras, _textureGras.Bounds.Width / 16, 0, 0));
 			_terrainTextures.Add(new TextureTile(_textureSand, _textureSand.Bounds.Width / 16, 0, 0));
+			base.LoadContent();
+		}
 
+		public override void SetpVertices()
+		{
 			SetupTileHeightFieldTerrain();
-			Buffers.LoadContent();
 		}
 
 		public override void Draw(GameTime gameTime)

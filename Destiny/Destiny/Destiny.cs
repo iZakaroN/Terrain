@@ -17,7 +17,7 @@ namespace Destiny
     /// <summary>
     /// This is the main type for your game
     /// </summary>
-    public class Destiny : Microsoft.Xna.Framework.Game, IClickActionElement
+	public class Destiny : Microsoft.Xna.Framework.Game
     {
         GraphicsDeviceManager graphics;
         GraphicsDevice Device { get { return graphics.GraphicsDevice; } }
@@ -30,6 +30,8 @@ namespace Destiny
         public Controller Controller { get; private set; }
 
         public World World { get; private set; }
+
+		InputControlMapper InputControlMapper;
 
         List<VisualElement> _visualObjects = new List<VisualElement>();
 
@@ -56,11 +58,14 @@ namespace Destiny
 
             Device.SamplerStates[0] = new SamplerState() { Filter = TextureFilter.PointMipLinear, MipMapLevelOfDetailBias = 2, MaxAnisotropy = 4, MaxMipLevel = 8 };
             graphics.ApplyChanges();
-            Controller = new Input.Controller(this);
-            Controller.Register(this);
             Camera = new Camera(this);
             World = new World(this);
-            _visualObjects.Add(Camera);
+
+			InputControlMapper = new Input.InputControlMapper(this, World.Avatar, World.UI);
+			Controller = new Input.Controller(this);
+			Controller.Register(InputControlMapper);
+
+			_visualObjects.Add(Camera);
             _visualObjects.Add(World);
             base.Initialize();
         }
@@ -130,23 +135,10 @@ namespace Destiny
             base.Draw(gameTime);
         }
 
-
-        List<ClickAction> IActionElement<ClickEvent, ClickAction>.Actions
-        {
-            get
-            {
-                return new List<ClickAction>()
-					{
-						new ClickAction(KeyboardController.GetEvent(Keys.F5), SwitchSolid), 
-						new ClickAction(KeyboardController.GetEvent(Keys.F6), SwitchCull), 
-					};
-            }
-        }
-
-        public void SwitchSolid(GameTime gt, ClickEvent e)
+        public void SwitchSolid()
         { SolidEnabled = !SolidEnabled; }
 
-        public void SwitchCull(GameTime gt, ClickEvent e)
+        public void SwitchCull()
         { CullEnabled = !CullEnabled; }
 
     }

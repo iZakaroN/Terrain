@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Destiny.Graphics.World.Buffer
 {
-    interface IPolygonBufferFactory<TB>
+    public interface IPolygonBufferFactory<TB>
                 where TB : PolygonBuffer
 
     {

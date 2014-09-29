@@ -10,7 +10,7 @@ using Destiny.Input.Actions;
 
 namespace Destiny
 {
-	public class Avatar : VisualElement, IPressedActionElement, IMotionActionElement
+	public class Avatar : VisualElement
 	{
 		public float AngleSpeed = 0.0020f;
 		public float MouseSpeed = 1f;
@@ -19,7 +19,6 @@ namespace Destiny
 		public Avatar(Destiny game)
 			: base(game)
 		{
-			game.Controller.Register(this);
 			Childs.Add(new Crosshair(game));
 		}
 
@@ -76,7 +75,7 @@ namespace Destiny
 
 		public void RotateH(GameTime gameTime, MotionEvent evnt)
 		{
-			AngleH -= evnt.Motion * AngleSpeed * MouseSpeed;
+			AngleH += evnt.Motion * AngleSpeed * MouseSpeed;
 		}
 
 		public void RotateV(GameTime gameTime, MotionEvent evnt)
@@ -99,45 +98,6 @@ namespace Destiny
 
 
 		#endregion
-
-		#region Controller
-		List<PressedAction> IActionElement<PressedEvent, PressedAction>.Actions
-		{
-			get
-			{
-				return new List<PressedAction>()
-                {
-
-                    new PressedAction(KeyboardController.GetEvent(Keys.Left), RotateLeft), 
-                    new PressedAction(KeyboardController.GetEvent(Keys.Right), RotateRight), 
-                    new PressedAction(KeyboardController.GetEvent(Keys.Up), RotateUp), 
-                    new PressedAction(KeyboardController.GetEvent(Keys.Down), RotateDown), 
-
-                    new PressedAction(KeyboardController.GetEvent(Keys.W), MoveForward), 
-                    new PressedAction(KeyboardController.GetEvent(Keys.S), MoveBackward), 
-                    new PressedAction(KeyboardController.GetEvent(Keys.A), MoveLeft), 
-                    new PressedAction(KeyboardController.GetEvent(Keys.D), MoveRight), 
-
-                    new PressedAction(KeyboardController.GetEvent(Keys.Space), MoveUp), 
-                    new PressedAction(KeyboardController.GetEvent(Keys.LeftControl), MoveDown), 
-                    new PressedAction(MouseController.GetEvent(MouseEvents.RightButton), SetCube), 
-                };
-			}
-		}
-
-		List<MotionAction> IActionElement<MotionEvent, MotionAction>.Actions
-		{
-			get
-			{
-				return new List<MotionAction>()
-                {
-                    new MotionAction(MouseController.GetEvent(MouseEvents.X), RotateH), 
-                    new MotionAction(MouseController.GetEvent(MouseEvents.Y), RotateV), 
-                };
-
-			}
-		}
-		#endregion Controller
 
 		#region Camera
 		public Vector3 Position

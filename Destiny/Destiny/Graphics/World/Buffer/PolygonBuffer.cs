@@ -123,7 +123,7 @@ namespace Destiny.Graphics.World
 			var position = AllocateFreePolygonsPosition(MeshPolygons);
 			SetPolygons(vertices, indices, position);
 
-			if (IsFull && Auto)
+			if (Auto && IsFull)
 			{
 				LoadBufferContent();
 				Buffered = true;
@@ -253,21 +253,11 @@ namespace Destiny.Graphics.World
 			}
 		}
 
-        #region Dispose
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-		        _vertexBuffer.Dispose();
-                _indexBuffer.Dispose();
-            }
-        }
-        #endregion Dispose
+		public override void UnloadContent()
+		{
+			base.UnloadContent();
+			if (_vertexBuffer != null) _vertexBuffer.Dispose();
+			if (_indexBuffer != null) _indexBuffer.Dispose();
+		}
 	}
 }

@@ -9,14 +9,13 @@ using System.Text;
 
 namespace Destiny.Graphics.UI
 {
-    class BouncingUI : BaseUI, IClickActionElement 
+    public class BouncingUI : BaseUI 
     {
         Vector2 _spriteSpeed = Vector2.One * 200;
 
         public BouncingUI(Destiny game)
 			: base(game)
 		{
-			game.Controller.Register(this);
 			Enabled = false;
 			AutoSizeX = false;
 			AutoSizeY = false;
@@ -24,20 +23,6 @@ namespace Destiny.Graphics.UI
             FontName = @"Font1";
             Size = new Vector2(100, 100);
 		}
-
-        List<ClickAction> IActionElement<ClickEvent, ClickAction>.Actions
-        {
-            get
-            {
-                return new List<ClickAction>()
-					{
-						new ClickAction(KeyboardController.GetEvent(Keys.F3), Switch), 
-					};
-            }
-        }
-
-        public void Switch(GameTime gt, ClickEvent e)
-        { Enabled = !Enabled; }
 
 		public override void Update(GameTime gameTime)
 		{
