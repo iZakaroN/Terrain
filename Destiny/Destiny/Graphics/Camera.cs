@@ -12,6 +12,7 @@ namespace Destiny
 	public class Camera : VisualElement
 	{
 
+		//public Vector3 Position = new Vector3(0, 0, 0);
 		public Vector3 Position = new Vector3(0, 200, -300);
 
 		/// <summary>
@@ -42,10 +43,9 @@ namespace Destiny
 		{
 		}
 
-		override public void LoadContent()
+		protected override void LoadSelf()
 		{
-			base.LoadContent();
-			projectionMatrix = Matrix.CreatePerspectiveFieldOfView(MathHelper.Pi / 3, Device.Viewport.AspectRatio, 0.1f, 1500.0f);
+			projectionMatrix = Matrix.CreatePerspectiveFieldOfView(MathHelper.Pi / 2, Device.Viewport.AspectRatio, 0.1f, 1500.0f);
 			CalculateView();
 		}
 
@@ -61,9 +61,8 @@ namespace Destiny
 			viewMatrix = Matrix.CreateLookAt(Position, Position + Forward, LookUp);
 		}
 
-		public override void Draw(GameTime gameTime)
+		protected override void DrawSelf()
 		{
-			base.Draw(gameTime);
 			CalculateView();
 			Effect.Parameters["xView"].SetValue(viewMatrix);
 			Effect.Parameters["xProjection"].SetValue(projectionMatrix);

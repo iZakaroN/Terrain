@@ -32,11 +32,11 @@ namespace Destiny.Graphics.UI
 
         TimeSpan ElapsedGameTime = TimeSpan.FromSeconds(1);
 
-		public override void Draw(GameTime gameTime)
+		/*override void Draw(GameTime gameTime)
 		{
 			base.Draw(gameTime);
 			ElapsedGameTime = gameTime.ElapsedGameTime;
-		}
+		}*/
 
 		private object GetFPS()
 		{

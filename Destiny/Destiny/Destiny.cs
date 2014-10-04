@@ -35,6 +35,8 @@ namespace Destiny
 
         List<VisualElement> _visualObjects = new List<VisualElement>();
 
+		Vector3 LightDirection = new Vector3(-10f, -10f, -10f);
+
 
         public Destiny()
         {
@@ -76,6 +78,7 @@ namespace Destiny
         /// </summary>
         protected override void LoadContent()
         {
+			//base.LoadContent();
             Effect = Content.Load<Effect>("effects");
             _visualObjects.ForEach(vo => vo.LoadContent());
 
@@ -86,6 +89,7 @@ namespace Destiny
         /// </summary>
         protected override void UnloadContent()
         {
+			//base.UnloadContent();
             _visualObjects.ForEach(vo => vo.UnloadContent());
         }
 
@@ -117,20 +121,18 @@ namespace Destiny
             //Camera.Draw(gameTime);
             Effect.Parameters["xEnableLighting"].SetValue(true);
             //Effect.Parameters["sampler"].SetValue( = SamplerState.PointClamp;
-            Vector3 lightDirection = new Vector3(-10f, -10f, -10f);
-            lightDirection.Normalize();
-            Effect.Parameters["xLightDirection"].SetValue(lightDirection);
+            LightDirection.Normalize();
+            Effect.Parameters["xLightDirection"].SetValue(LightDirection);
             Effect.Parameters["xAmbient"].SetValue(0.5f);
             this.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
 
             RasterizerState rs = new RasterizerState();
             rs.CullMode = CullEnabled ? CullMode.CullCounterClockwiseFace : CullMode.None;
-            rs.FillMode = SolidEnabled ? FillMode.Solid : FillMode.WireFrame;
+			//rs.CullMode = CullEnabled ? CullMode.CullClockwiseFace : CullMode.None;
+			rs.FillMode = SolidEnabled ? FillMode.Solid : FillMode.WireFrame;
             GraphicsDevice.RasterizerState = rs;
 
             _visualObjects.ForEach(vo => vo.Draw(gameTime));
-
-
 
             base.Draw(gameTime);
         }

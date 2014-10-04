@@ -16,27 +16,74 @@ using Destiny.Graphics.World.Buffer;
 
 namespace Destiny
 {
-	abstract public class Terrain : VisualElement
+
+	public interface ITerrain : IVisualElement
+	{
+		void SetMapPoint(Vector3 position);
+		void SetPointing(Vector3 position);
+		void SwitchPointing();
+		TerrainDebugInfo GetDebugInfo();
+	}
+
+	abstract class Terrain : VisualElement, ITerrain
 	{
 
-		public abstract IGeometryBuffers GetBuffers();
+		bool Pointing;
+		Vector3 LastPointingLocation;
+		Vector3 NewPointingLocation;
 
-		public Terrain(Destiny game) : base(game)
+
+		public Terrain(Destiny game)
+			: base(game)
 		{
 		}
 
-		public virtual void AddCube(Vector3 position)
+		public virtual void SetMapPoint(Vector3 position)
 		{
 		}
 
+		public void SwitchPointing()
+		{
+			Pointing = !Pointing;
+		}
 
+		public void SetPointing(Vector3 position)
+		{
+			NewPointingLocation = position;
+		}
+
+		protected override void UpdateSelf(GameTime gameTime)
+		{
+			base.UpdateSelf(gameTime);
+			/*if (LastPointingLocation != NewPointingLocation)
+			{
+				HidePointingLocation();
+				if (Pointing)
+				{
+					ShowPointingLocation(NewPointingLocation);
+					LastPointingLocation = NewPointingLocation;
+
+				}
+			}*/
+		}
+
+		protected virtual void HidePointingLocation()
+		{
+		}
+
+		protected virtual void ShowPointingLocation(Vector3 NewPointingLocation)
+		{
+		}
+
+		public abstract TerrainDebugInfo GetDebugInfo();
 	}
-	abstract public class Terrain<B> : Terrain
+
+	abstract class Terrain<B> : Terrain
 		where B : PolygonBuffer
 	{
 
 
-		public const int DOWNSCALE = 4;
+		public const int DOWNSCALE = 2;
 		public int MapTilesWidth = 1024 / DOWNSCALE;
 		public int MapTilesHeight = 1024 / DOWNSCALE;
 		public int TerrainDepthScale = 400 * DOWNSCALE;
@@ -51,29 +98,31 @@ namespace Destiny
 		protected Terrain(Destiny game, GeometryBuffers<B> buffers)
 			: base(game)
 		{
-			Buffers = buffers;
+			AddChild(Buffers = buffers);
 		}
-
-		public override IGeometryBuffers GetBuffers()
-		{
-			return Buffers;
-		}
-
 
 		protected float GetDepth(Sunshine.World.MapTile tile)
 		{
 			return ((float)tile.Terrain.Depth - Sunshine.World.World.HeightTerrainTypeWater) / TerrainDepthScale;
 		}
 
-		public override void LoadContent()
+		protected override void LoadSelf()
 		{
-			base.LoadContent();
-
-
-			Task.Factory.StartNew(() => SetpVertices());
+			base.LoadSelf();
+			var task = Task.Factory.StartNew(() => SetupVertices());
 		}
 
-		public abstract void SetpVertices();
+		public override TerrainDebugInfo GetDebugInfo()
+		{
+			return new TerrainDebugInfo()
+			{
+				BuffersCount = Buffers.Count,
+				//CurrentBuffer = Buffers.GetBuffer().GetDebugInfo(),
+				CurrentBuffer = Buffers.ProcessBuffer((buffer) => buffer.GetDebugInfo()),
+			};
+		}
+
+		protected abstract void SetupVertices();
 
 	}
 }

@@ -46,7 +46,7 @@ namespace Destiny.Graphics.World
 			return tiles.ToList().ConvertAll((tileNum) => _terrainTextures[tileNum]);
 		}
 
-		public override void AddCube(Vector3 position)
+		public override void SetMapPoint(Vector3 position)
 		{
 			AddCube(_cube_rock, position);
 		}
@@ -56,40 +56,38 @@ namespace Destiny.Graphics.World
 			var cube = new Cube(textureSet);
 			var oVector = _dimension.AllocateNode(position, cube);
 			//if (addToBuffer)
-				cube.AddToBuffer(Buffers.GetBuffer(), _dimension.ToWorldVector(oVector));
+			//cube.AddToBuffer(Buffers.GetBuffer(), _dimension.ToWorldVector(oVector));
+			Buffers.ProcessBuffer((buffer) => cube.AddToBuffer(buffer, _dimension.ToWorldVector(oVector)));
+		}
+
+		Cube PointCube;
+		protected override void HidePointingLocation()
+		{
+			base.HidePointingLocation();
+			if (PointCube != null)
+			{
+				PointCube.RemoveFromBuffer();
+				PointCube = null;
+			}
+		}
+
+		protected override void ShowPointingLocation(Vector3 newPointingLocation)
+		{
+			base.ShowPointingLocation(newPointingLocation);
+			PointCube = new Cube(_cube_rock);
+			var oVector = new OctagonalVector(newPointingLocation);
+			//PointCube.AddToBuffer(Buffers.GetBuffer(), oVector);
+			Buffers.ProcessBuffer((buffer) => PointCube.AddToBuffer(buffer, oVector));
 		}
 
 		void SetZero()
 		{
-			/*			_dimension._rootVector = new OctagonalVector(0, 0, 0);
-						_dimension._root = new Octant(0, new Octant(1, new Cube(_cube_lava)));
-						_dimension._depth = 2;*/
-			//			_buffers = new List<CubeBuffer>();
-
-			//			AddCube(_cube_text, new Vector3(-1, -1, -1));
-
 			AddCube(_cube_lava, new Vector3(1, 0, 0));
 			AddCube(_cube_lava, new Vector3(0, 1, 0));
 			AddCube(_cube_lava, new Vector3(0, 0, 1));
 			AddCube(_cube_lava, new Vector3(-1, 0, 0));
 			AddCube(_cube_lava, new Vector3(0, -1, 0));
 			AddCube(_cube_lava, new Vector3(0, 0, -1));
-
-			/*			AddCube(_cube_lava, new Vector3(1, 0, 0));
-						AddCube(_cube_lava, new Vector3(-1, 0, 0));
-						AddCube(_cube_lava, new Vector3(2, 0, 0));
-						AddCube(_cube_lava, new Vector3(-2, 0, 0));*/
-
-			/*			AddCube(_cube_grass, new Vector3(-1, 0, 0));
-						AddCube(_cube_grass, new Vector3(-1, -1, 0));
-						AddCube(_cube_grass, new Vector3(-1, -2, 0));*/
-
-			/*			CubeIterrator((vector) =>
-							{
-								AddCube(_cube_lava, vector);
-								});*/
-			//			_dimension.GetIterrator(SetupDimension).Iterrate();
-
 		}
 
 		private void SetupCubeHeightFieldTerrain()
@@ -110,7 +108,7 @@ namespace Destiny.Graphics.World
 						GetDepth(HeightFieldTerrain.GetMapTile(x, t)),
 						GetDepth(HeightFieldTerrain.GetMapTile(x, b))
 						);
-					for (int d = (int)minDepth + 1; d < tileDepth; d++)
+					for (int d = (int)minDepth + 1; d <= (int)tileDepth; d++)
 						AddCube(_cube_dirth, new Vector3(x - MapTilesWidth / 2, d, y - MapTilesHeight / 2), false);
 
 					AddCube(_cube_grass, new Vector3(x - MapTilesWidth / 2, tileDepth, y - MapTilesHeight / 2), false);
@@ -126,7 +124,7 @@ namespace Destiny.Graphics.World
 			return result;
 		}
 
-		override public void LoadContent()
+		protected override void LoadSelf()
 		{
 			_texture = Content.Load<Texture2D>(@"Textures\terrain");
 
@@ -149,34 +147,29 @@ namespace Destiny.Graphics.World
 			_cube_lava = GetTileSet(TILE_LAVA, TILE_LAVA, TILE_LAVA, TILE_LAVA, TILE_LAVA, TILE_LAVA);
 			_cube_dirth = GetTileSet(TILE_DIRTH, TILE_DIRTH, TILE_DIRTH, TILE_DIRTH, TILE_DIRTH, TILE_DIRTH);
 			_cube_rock = GetTileSet(TILE_ROCK, TILE_ROCK, TILE_ROCK, TILE_ROCK, TILE_ROCK, TILE_ROCK);
-			base.LoadContent();
-
+			base.LoadSelf();
 		}
 
-		public override void SetpVertices()
+		protected override void SetupVertices()
 		{
 			SetZero();
 			SetupCubeHeightFieldTerrain();
 		}
 
-		public override void Draw(GameTime gameTime)
+		protected override void DrawChilds(Action drawChilds)
 		{
-			base.Draw(gameTime);
 			Effect.Parameters["xTexture"].SetValue(_texture);
 			foreach (EffectPass pass in Effect.CurrentTechnique.Passes)
 			{
 				pass.Apply();
-				Buffers.Draw(gameTime);
+				drawChilds();
 			}
-
 			/*Effect.CurrentTechnique = Effect.Techniques["ColoredNoShading"];
 			foreach (EffectPass pass in Effect.CurrentTechnique.Passes)
 			{
 				pass.Apply();
 				_dimension.GetIterrator(DrawOctant).Iterrate();
 			}*/
-
-
 		}
 
 		void DrawOctant(Octant octant, List<int> path)

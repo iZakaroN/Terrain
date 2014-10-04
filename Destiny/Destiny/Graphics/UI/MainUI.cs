@@ -17,11 +17,8 @@ namespace Destiny.Graphics.UI
 		public MainUI(Destiny game)
 			: base(game)
 		{
-			BouncingUI = new BouncingUI(game);
-			DebugUI = new DebugInfo(game);
-
-			Childs.Add(BouncingUI);
-			Childs.Add(DebugUI);
+			AddChild(BouncingUI = new BouncingUI(game));
+			AddChild(DebugUI = new DebugInfo(game));
 
 			Enabled = true;
 			AutoSizeX = false;
@@ -30,11 +27,11 @@ namespace Destiny.Graphics.UI
 			AddText("Keys:");
         }
 
-		override public void LoadContent()
+		protected override void LoadSelf()
 		{
-			base.LoadContent();
+			base.LoadSelf();
 			Size.X = Device.Viewport.Width;
-		} 
+		}
 
         public void Exit()
 		{ Game.Exit(); }

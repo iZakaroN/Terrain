@@ -32,7 +32,8 @@ namespace Destiny.Graphics.World
 		private void AddTile(TextureTile texture, MapTile[] tiles, Vector3 vector3)
 		{
 			var tile = new Tile(texture, tiles, TerrainDepthScale);
-			tile.AddToBuffer(Buffers.GetBuffer(), vector3);
+			//tile.AddToBuffer(Buffers.GetBuffer(), vector3);
+			Buffers.ProcessBuffer((buffer) => tile.AddToBuffer(buffer, vector3));
 		}
 
 		private void SetupTileHeightFieldTerrain()
@@ -60,7 +61,7 @@ namespace Destiny.Graphics.World
 			GC.Collect(GC.MaxGeneration);
 		}
 
-		override public void LoadContent()
+		protected override void LoadSelf()
 		{
 			_textureSnow = Content.Load<Texture2D>(@"Textures\snow");
 			_textureRock = Content.Load<Texture2D>(@"Textures\rock");
@@ -71,22 +72,21 @@ namespace Destiny.Graphics.World
 			_terrainTextures.Add(new TextureTile(_textureRock, _textureRock.Bounds.Width / 16, 0, 0));
 			_terrainTextures.Add(new TextureTile(_textureGras, _textureGras.Bounds.Width / 16, 0, 0));
 			_terrainTextures.Add(new TextureTile(_textureSand, _textureSand.Bounds.Width / 16, 0, 0));
-			base.LoadContent();
+			base.LoadSelf();
 		}
 
-		public override void SetpVertices()
+		protected override void SetupVertices()
 		{
 			SetupTileHeightFieldTerrain();
 		}
 
-		public override void Draw(GameTime gameTime)
+		protected override void DrawChilds(Action drawChilds)
 		{
-			base.Draw(gameTime);
 			Effect.Parameters["xTexture"].SetValue(_textureRock);
 			foreach (EffectPass pass in Effect.CurrentTechnique.Passes)
 			{
 				pass.Apply();
-				Buffers.Draw(gameTime);
+				drawChilds();
 			}
 		}
 

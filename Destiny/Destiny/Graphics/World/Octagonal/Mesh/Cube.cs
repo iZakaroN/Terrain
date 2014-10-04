@@ -101,6 +101,12 @@ namespace Destiny.Graphics.World.Octagonal.Mesh
 			BufferPossition = buffer.AddMesh(GetVertices(position, FacesTexture), Indices);
 		}
 
+		internal void RemoveFromBuffer()
+		{
+			Buffer.RemoveMesh(BufferPossition);
+		}
+
+
 		/*private VertexPositionNormalTexture[] GetVertices()
 		{
 			return GetVertices(Position, FacesTexture);
@@ -238,6 +244,5 @@ namespace Destiny.Graphics.World.Octagonal.Mesh
 				}
 			}*/
 		}
-
 	}
 }

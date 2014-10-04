@@ -62,19 +62,19 @@ namespace Destiny.Graphics.UI
             _textElements.Clear();
         }
 
-		override public void LoadContent()
+		protected override void LoadSelf()
 		{
-			base.LoadContent();
+			base.LoadSelf();
 			_spriteBatch = new SpriteBatch(Device);
-            if (FontName != null)
-                _font = Content.Load<SpriteFont>(FontName);
-            if (TextureName != null)
-                _backgroundTexture = Content.Load<Texture2D>(TextureName);
-        }
+			if (FontName != null)
+				_font = Content.Load<SpriteFont>(FontName);
+			if (TextureName != null)
+				_backgroundTexture = Content.Load<Texture2D>(TextureName);
+		}
 
-		public override void Update(GameTime gameTime)
+		protected override void UpdateSelf(GameTime gameTime)
 		{
-			base.Update(gameTime);
+			base.UpdateSelf(gameTime);
 			if (Enabled)
 			{
 				ProcessText();
@@ -88,9 +88,9 @@ namespace Destiny.Graphics.UI
 			}
 		}
 
-		public override void Draw(GameTime gameTime)
+		protected override void DrawSelf()
 		{
-			base.Draw(gameTime);
+			base.DrawSelf();
 			if (Enabled)
 			{
 				_spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
@@ -102,7 +102,7 @@ namespace Destiny.Graphics.UI
 					DrawText(_spriteBatch);
 				_spriteBatch.End();
 			}
-        }
+		}
 
         private void DrawBackground(SpriteBatch spriteBatch)
         {
@@ -175,9 +175,9 @@ namespace Destiny.Graphics.UI
         }
 
 
-		public override void UnloadContent()
+		protected override void UnloadSelf()
 		{
-			base.UnloadContent();
+			base.UnloadSelf();
 			if (_spriteBatch != null) _spriteBatch.Dispose();
 			if (_backgroundTexture != null) _backgroundTexture.Dispose();
 		}

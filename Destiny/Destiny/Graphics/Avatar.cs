@@ -14,12 +14,12 @@ namespace Destiny
 	{
 		public float AngleSpeed = 0.0020f;
 		public float MouseSpeed = 1f;
-		public float MoveSpeed = 0.053f;
+		public float MoveSpeed = 0.003f;
 
 		public Avatar(Destiny game)
 			: base(game)
 		{
-			Childs.Add(new Crosshair(game));
+			AddChild(new Crosshair(game));
 		}
 
 		#region Movement
@@ -85,19 +85,32 @@ namespace Destiny
 
 		#endregion Movement
 
+		#region VisualElement
+		protected override void UpdateSelf(GameTime gameTime)
+		{
+			base.UpdateSelf(gameTime);
+			SetPointing();
+		}
+		#endregion VisualElement
+
 		#region Actions
-		public void SetCube(GameTime gameTime, PressedEvent evnt)
+		public void SetMapPoint()
 		{
-			Game.World.Terrain.AddCube(RoundCubeCoordinated(Position+Forward*1.9f));
+			Game.World.Terrain.SetMapPoint(GetPointingLocation());
+		}
+		#endregion Actions
+
+		#region Privite
+		private void SetPointing()
+		{
+			Game.World.Terrain.SetPointing(GetPointingLocation());
 		}
 
-		public Vector3 RoundCubeCoordinated(Vector3 v)
+		private Vector3 GetPointingLocation()
 		{
-			return new Vector3((int)v.X, (int)v.Y, (int)v.Z);
+			return Position + Forward * 2.5f;
 		}
-
-
-		#endregion
+		#endregion Privite
 
 		#region Camera
 		public Vector3 Position
