@@ -26,7 +26,7 @@ namespace Destiny
 		bool _active = true;
 		bool ContentLoaded;
 
-		readonly public List<VisualElement> Childs = new List<VisualElement>();
+		readonly private List<IVisualElement> Childs = new List<IVisualElement>();
 
 		public VisualElement(Destiny game)
 		{
@@ -47,11 +47,13 @@ namespace Destiny
 		public virtual void LoadContent()
 		{
 			Childs.ForEach(vo => vo.LoadContent());
+			ContentLoaded = true;
 		}
 
 		public virtual void UnloadContent()
 		{
 			Childs.ForEach(vo => vo.UnloadContent());
+			ContentLoaded = false;
 		}
 
 		public void Update(GameTime gameTime)
@@ -83,6 +85,37 @@ namespace Destiny
 			Childs.ForEach(vo => vo.Draw(gameTime));
 		}
 		#endregion Virtaul
+
+		#region Protected
+
+		protected void AddChild(IVisualElement child)
+		{
+			if (ContentLoaded)
+				child.LoadContent();
+			Childs.Add(child);
+		}
+
+		protected void AddChild(int position, IVisualElement child)
+		{
+			if (ContentLoaded)
+				child.LoadContent();
+			Childs.Insert(position, child);
+		}
+
+		protected void RemoveChild(IVisualElement child)
+		{
+			Childs.Remove(child);
+			if (ContentLoaded)
+				child.UnloadContent();
+		}
+
+		protected void RemoveAllChilds()
+		{
+			if (ContentLoaded)
+				Childs.ForEach((ve) => ve.UnloadContent());
+			Childs.Clear();
+		}
+		#endregion Protected
 
 		#region Dispose
 		public void Dispose()

@@ -108,6 +108,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Graphics\UI\BouncingUI.cs" />
+    <Compile Include="Graphics\World\DebugInfo.cs" />
     <Compile Include="Graphics\World\TerrainCube.cs" />
     <Compile Include="Graphics\World\TerrainTile.cs" />
     <Compile Include="Input\Actions\ClickAction.cs" />
@@ -127,7 +128,7 @@
     <Compile Include="Input\Controller.cs" />
     <Compile Include="Graphics\Crosshair.cs" />
     <Compile Include="Graphics\TextureTile.cs" />
-    <Compile Include="Graphics\UI\DebugInfo.cs" />
+    <Compile Include="Graphics\UI\DebugUI.cs" />
     <Compile Include="Graphics\UI\MainUI.cs" />
     <Compile Include="Graphics\World\Buffer\GeometryBuffers.cs" />
     <Compile Include="Graphics\World\Buffer\IPolygonBufferFactory.cs" />

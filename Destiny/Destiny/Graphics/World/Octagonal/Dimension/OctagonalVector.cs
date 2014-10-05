@@ -28,9 +28,9 @@ namespace Destiny.Graphics.World.Octagonal.Dimension
 		public OctagonalVector(Vector3 vector3)
 		{
 
-			X = (int)vector3.X;
-			Y = (int)vector3.Y;
-			Z = (int)vector3.Z;
+			X = (int)Math.Floor(vector3.X);
+			Y = (int)Math.Floor(vector3.Y);
+			Z = (int)Math.Floor(vector3.Z);
 		}
 
 		public static OctagonalVector operator -(OctagonalVector v1, OctagonalVector v2)

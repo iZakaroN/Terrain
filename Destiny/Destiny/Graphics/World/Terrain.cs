@@ -16,16 +16,65 @@ using Destiny.Graphics.World.Buffer;
 
 namespace Destiny
 {
-	abstract public class Terrain : VisualElement
+	public interface ITerrain : IVisualElement
+	{
+		void SetMapPoint(Vector3 position);
+		void SetPointing(Vector3 position);
+		void SwitchPointing();
+		TerrainDebugInfo GetDebugInfo();
+	}
+
+	abstract public class Terrain : VisualElement, ITerrain
 	{
 
-		public abstract IGeometryBuffers GetBuffers();
+		bool Pointing;
+		Vector3 LastPointingLocation;
+		Vector3 NewPointingLocation;
 
 		public Terrain(Destiny game) : base(game)
 		{
 		}
 
-		public virtual void AddCube(Vector3 position)
+		#region ITerrain
+		public virtual void SetMapPoint(Vector3 position)
+		{
+		}
+
+		public void SetPointing(Vector3 position)
+		{
+			NewPointingLocation = position;
+		}
+
+		public void SwitchPointing()
+		{
+			Pointing = !Pointing;
+			NewPointingLocation = Vector3.Zero;
+		}
+
+		public abstract TerrainDebugInfo GetDebugInfo();
+
+		#endregion ITerrain
+
+		protected override void UpdateSelf(GameTime gameTime)
+		{
+			base.UpdateSelf(gameTime);
+			if (LastPointingLocation != NewPointingLocation)
+			{
+				HidePointingLocation();
+				if (Pointing)
+				{
+					ShowPointingLocation(NewPointingLocation);
+					LastPointingLocation = NewPointingLocation;
+
+				}
+			}
+		}
+
+		protected virtual void HidePointingLocation()
+		{
+		}
+
+		protected virtual void ShowPointingLocation(Vector3 NewPointingLocation)
 		{
 		}
 
@@ -52,7 +101,7 @@ namespace Destiny
 		public int MapTilesHeight = 1024 / DOWNSCALE;
 		public int TerrainDepthScale = 400 * DOWNSCALE;
 
-		public GeometryBuffers<B> Buffers;
+		private GeometryBuffers<B> Buffers;
 
 		VertexDeclaration VertexDeclaration
 		{
@@ -62,25 +111,36 @@ namespace Destiny
 		protected Terrain(Destiny game, GeometryBuffers<B> buffers)
 			: base(game)
 		{
-			Buffers = buffers;
+			AddChild(Buffers = buffers);
 		}
 
-		public override IGeometryBuffers GetBuffers()
+		protected void ProcessBuffer(Action<B> process)
 		{
-			return Buffers;
+			Buffers.ProcessBuffer(process);
 		}
 
+		protected T ProcessBuffer<T>(Func<B, T> process)
+		{
+			return Buffers.ProcessBuffer<T>(process);
+		}
 
 		protected float GetDepth(Sunshine.World.MapTile tile)
 		{
 			return ((float)tile.Terrain.Depth - Sunshine.World.World.HeightTerrainTypeWater) / TerrainDepthScale;
 		}
 
+		public override TerrainDebugInfo GetDebugInfo()
+		{
+			return new TerrainDebugInfo()
+			{
+				BuffersCount = Buffers.Count,
+				CurrentBuffer = Buffers.ProcessBuffer((buffer) => buffer.GetDebugInfo()),
+			};
+		}
+
 		public override void LoadContent()
 		{
 			base.LoadContent();
-
-
 			Task.Factory.StartNew(() => SetpVertices());
 		}
 

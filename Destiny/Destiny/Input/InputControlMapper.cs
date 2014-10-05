@@ -35,6 +35,7 @@ namespace Destiny.Input
 						new ClickAction(KeyboardController.GetEvent(Keys.F3), (gt,e) => _mainUI.BouncingUI.Switch()), 
 						new ClickAction(KeyboardController.GetEvent(Keys.F2), (gt,e) => _mainUI.DebugUI.Switch()), 
 						new ClickAction(KeyboardController.GetEvent(Keys.F4), (gt,e) => _game.World.SwitchTerrain()), 
+						new ClickAction(KeyboardController.GetEvent(Keys.Q), (gt,e) => _game.World.Terrain.SwitchPointing()), 
 
 
 					};
@@ -60,7 +61,7 @@ namespace Destiny.Input
 
                     new PressedAction(KeyboardController.GetEvent(Keys.Space), _avatar.MoveUp), 
                     new PressedAction(KeyboardController.GetEvent(Keys.LeftControl), _avatar.MoveDown), 
-                    new PressedAction(MouseController.GetEvent(MouseEvents.RightButton), _avatar.SetCube), 
+                    new PressedAction(MouseController.GetEvent(MouseEvents.RightButton), (gt,pe) => _avatar.SetMapPoint()), 
                 };
 			}
 		}

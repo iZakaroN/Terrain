@@ -83,7 +83,7 @@ namespace Destiny.Graphics.World.Octagonal.Mesh
 		};
 
 		List<TextureTile> FacesTexture;
-//		Vector3 Position;
+
 		int BufferPossition;
 		CubeBuffer Buffer;
 
@@ -101,10 +101,10 @@ namespace Destiny.Graphics.World.Octagonal.Mesh
 			BufferPossition = buffer.AddMesh(GetVertices(position, FacesTexture), Indices);
 		}
 
-		/*private VertexPositionNormalTexture[] GetVertices()
+		internal void RemoveFromBuffer()
 		{
-			return GetVertices(Position, FacesTexture);
-		}*/
+			Buffer.RemoveMesh(BufferPossition);
+		}
 
 		static private VertexPositionNormalTexture[] GetVertices(Vector3 position, List<TextureTile> textures)
 		{

@@ -9,9 +9,11 @@ namespace Destiny.Graphics.World
 {
 	public class World : VisualElement, IDisposable
 	{
-		public Terrain Terrain;
-		TerrainCube TerrainCube;
-		TerrainTile TerrainTile;
+		public ITerrain Terrain;
+		ITerrain _terrainCube;
+		ITerrain _terrainTile;
+
+		TerrainDebugInfo DebugInfo = TerrainDebugInfo.Empty();
 
 		public MainUI UI;
 		public Avatar Avatar;
@@ -22,50 +24,69 @@ namespace Destiny.Graphics.World
 			: base(game)
 		{
 
-			UI = new MainUI(game);
-			Childs.Add(UI);
-
-			Avatar = new Avatar(game);
-			Childs.Add(Avatar);
+			AddChild(UI = new MainUI(game));
+			AddChild(Avatar = new Avatar(game));
 
 		}
 
 		public override void LoadContent()
 		{
 			base.LoadContent();
-			this.Game.World.UI.DebugUI.Debug("Number of buffers: {0}", () => Terrain.GetBuffers().Buffers.Count);
-			this.Game.World.UI.DebugUI.Debug("Current Buffer Regions: {0}", () => Terrain.GetBuffers().CurrentBuffer.RegionCount);
-			this.Game.World.UI.DebugUI.Debug("Current Buffer Free Polygons: {0}", () => Terrain.GetBuffers().CurrentBuffer.FreePolygons);
-			this.Game.World.UI.DebugUI.Debug("Mesh: {0}", () => Terrain.GetBuffers().CurrentBuffer.FreePolygons);
+			this.Game.World.UI.DebugUI.Debug("Number of buffers: {0}", () => DebugInfo.BuffersCount);
+			this.Game.World.UI.DebugUI.Debug("Current Buffer Regions: {0}", () => DebugInfo.CurrentBuffer.RegionCount);
+			this.Game.World.UI.DebugUI.Debug("Current Buffer Free Polygons: {0}", () => DebugInfo.CurrentBuffer.FreePolygons);
+			this.Game.World.UI.DebugUI.Debug("Current Buffer Total Polygons: {0}", () => DebugInfo.CurrentBuffer.TotalPolygons);
+			this.Game.World.UI.DebugUI.Debug("Position: {0}:{1}:{2}", () => Avatar.Position.X, () => Avatar.Position.Y, () => Avatar.Position.Z);
 			SetActiveTerrain();
 		}
 
 		private void SetActiveTerrain()
 		{
-			if (cubicTerrain)
-				Terrain = GetTerrainCube();
-			else
-				Terrain = GetTerrainTile();
+			if (Terrain != null)
+			{
+				Terrain.Visible = Terrain.Active = false;
+			}
+			Terrain = cubicTerrain ? TerrainCube : TerrainTile;
+			Terrain.Visible = Terrain.Active = true;
 		}
 
-		private Terrain GetTerrainCube()
+		ITerrain TerrainCube
 		{
-			if (TerrainCube == null)
+			get
 			{
-				TerrainCube = new TerrainCube(Game);
-				TerrainCube.LoadContent();
+				/*if (_terrainCube != null)
+				{
+					RemoveChild(_terrainCube);
+					_terrainCube = null;
+				}*/
+
+				if (_terrainCube == null)
+				{
+					_terrainCube = new TerrainCube(Game) { Visible = false };
+					AddChild(0, _terrainCube);
+				}
+				return _terrainCube;
 			}
-			return TerrainCube;
 		}
 
-		private Terrain GetTerrainTile()
+		private ITerrain TerrainTile
 		{
-			if (TerrainTile == null)
+			get
 			{
-				TerrainTile = new TerrainTile(Game);
-				TerrainTile.LoadContent();
+				/*if (_terrainTile != null)
+				{
+					RemoveChild(_terrainTile);
+					_terrainTile = null;
+				}*/
+
+				if (_terrainTile == null)
+				{
+					_terrainTile = new TerrainTile(Game) { Visible = false };
+					AddChild(0, _terrainTile);
+
+				}
+				return _terrainTile;
 			}
-			return TerrainTile;
 		}
 
 		public void SwitchTerrain()
@@ -74,10 +95,13 @@ namespace Destiny.Graphics.World
 			SetActiveTerrain();
 		}
 
-		protected override void DrawSelf(GameTime gameTime)
+		protected override void UpdateSelf(GameTime gameTime)
 		{
-			base.DrawSelf(gameTime);
-			Terrain.Draw(gameTime);
+			base.UpdateSelf(gameTime);
+			if (Terrain != null)
+			{
+				DebugInfo = Terrain.GetDebugInfo();
+			}
 		}
 	}
 }

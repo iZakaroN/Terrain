@@ -12,16 +12,13 @@ namespace Destiny.Graphics.UI
     public class MainUI : BaseUI
 	{
 		public BouncingUI BouncingUI;
-		public DebugInfo DebugUI;
+		public DebugUI DebugUI;
 
 		public MainUI(Destiny game)
 			: base(game)
 		{
-			BouncingUI = new BouncingUI(game);
-			DebugUI = new DebugInfo(game);
-
-			Childs.Add(BouncingUI);
-			Childs.Add(DebugUI);
+			AddChild(BouncingUI = new BouncingUI(game));
+			AddChild(DebugUI = new DebugUI(game));
 
 			Enabled = true;
 			AutoSizeX = false;

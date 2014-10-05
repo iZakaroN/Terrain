@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework;
 
 namespace Destiny.Graphics.World
 {
-	public class BufferRegion : IComparer<BufferRegion>
+	public class BufferRegion
 	{
 		private int _low;
 		private int _high;
@@ -26,10 +26,6 @@ namespace Destiny.Graphics.World
 			get { return High - Low; }
 		}
 
-		public int Compare(BufferRegion x, BufferRegion y)
-		{
-			return Math.Sign(x.Low - y.Low) + Math.Sign(x.High - y.High);
-		}
 	}
 
 	public class PolygonBuffer : VisualElement, IDisposable
@@ -151,8 +147,13 @@ namespace Destiny.Graphics.World
 		{
 
 			BufferRegion meshRegion = new BufferRegion(position, position + MeshPolygons);
-			int regionPosition = FindRegion(meshRegion);
-			Debug.Assert(regionPosition != -1, "Cannot find mesh in polygon buffer.", "at position {0}", position);
+
+			//Find containing region
+			int regionPosition = 0;
+			while (regionPosition < UsedRegions.Count && UsedRegions[regionPosition].High < position) regionPosition++;
+			if (regionPosition == UsedRegions.Count || UsedRegions[regionPosition].Low > position)
+				throw new KeyNotFoundException("Cannot find proper region"); Debug.Assert(regionPosition != -1, "Cannot find mesh in polygon buffer.", "at position {0}", position);
+
 			Debug.Assert(UsedRegions[regionPosition].Low <= meshRegion.Low, "Invalid mesh region.");
 			Debug.Assert(UsedRegions[regionPosition].High >= meshRegion.High, "Invalid mesh region.");
 
@@ -200,24 +201,15 @@ namespace Destiny.Graphics.World
 			return position;
 		}
 
-		private int FindRegion(BufferRegion region)
+		public BufferDebugInfo GetDebugInfo()
 		{
-			return UsedRegions.BinarySearch(region, region);
-		}
-
-		public int RegionCount
-		{
-			get { return UsedRegions.Count; }
-		}
-
-		public int FreePolygons
-		{
-			get
+			return new BufferDebugInfo()
 			{
-				return UsedRegions.Aggregate(MaxPolygonCount, (maxPolygons, region) => maxPolygons - region.Count);
-			}
+				RegionCount = UsedRegions.Count,
+				FreePolygons = UsedRegions.Aggregate(MaxPolygonCount, (maxPolygons, region) => maxPolygons - region.Count),
+				TotalPolygons = MaxPolygonCount,
+			};
 		}
-
 
 		public bool IsFull { get { return UsedRegions.Count == 1 /*> 0*/ && UsedRegions.Last().High >= MaxPolygonCount; } }
 

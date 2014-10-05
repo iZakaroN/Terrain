@@ -6,32 +6,40 @@ using System.Text;
 
 namespace Destiny.Graphics.World
 {
-	public interface IGeometryBuffers
+	public class GeometryBuffers<TB> : VisualElement
+		where TB : PolygonBuffer
 	{
-		PolygonBuffer CurrentBuffer { get; }
-		List<VisualElement> Buffers { get; }
+		IPolygonBufferFactory<TB> BufferFactory;
+		TB CurrentBuffer = null;
+
+		public GeometryBuffers(Destiny game, IPolygonBufferFactory<TB> bufferFactory)
+			: base(game)
+		{
+			BufferFactory = bufferFactory;
+		}
+
+		public override void UnloadContent()
+		{
+			base.UnloadContent();
+			CurrentBuffer = null;
+			RemoveAllChilds();
+		}
+
+		public void ProcessBuffer(Action<TB> process)
+		{
+			ProcessBuffer((buffer) => { process(buffer); return true; });
+		}
+
+		public T ProcessBuffer<T>(Func<TB, T> process)
+		{
+			lock (this)
+			{
+				if (CurrentBuffer == null || CurrentBuffer.IsFull)
+				{
+					AddChild(CurrentBuffer = BufferFactory.CreateBuffer(Game));
+				}
+				return process(CurrentBuffer);
+			}
+		}
 	}
-
-	public class GeometryBuffers<TB> : VisualElement, IGeometryBuffers
-        where TB : PolygonBuffer
-    {
-        IPolygonBufferFactory<TB> BufferFactory;
-        public GeometryBuffers(Destiny game, IPolygonBufferFactory<TB> bufferFactory) : base(game)
-        {
-            BufferFactory = bufferFactory;
-        }
-
-		public PolygonBuffer CurrentBuffer { get { return GetBuffer(); } }
-		public List<VisualElement> Buffers { get { return Childs; } }
-
-
-        public TB GetBuffer()
-        {
-            if (Childs.Count == 0 || ((TB)Childs[0]).IsFull)
-            {
-                Childs.Insert(0, BufferFactory.CreateBuffer(Game));
-            }
-            return (TB)Childs[0];
-        }
-    }
 }

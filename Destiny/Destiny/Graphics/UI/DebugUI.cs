@@ -9,9 +9,9 @@ using Destiny.Input.Actions;
 
 namespace Destiny.Graphics.UI
 {
-	public class DebugInfo : BaseUI
+	public class DebugUI : BaseUI
 	{
-		public DebugInfo(Destiny game)
+		public DebugUI(Destiny game)
 			: base(game)
 		{
 			Enabled = true;

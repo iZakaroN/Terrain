@@ -32,7 +32,7 @@ namespace Destiny.Graphics.World
 		private void AddTile(TextureTile texture, MapTile[] tiles, Vector3 vector3)
 		{
 			var tile = new Tile(texture, tiles, TerrainDepthScale);
-			tile.AddToBuffer(Buffers.GetBuffer(), vector3);
+			ProcessBuffer((buffer) => tile.AddToBuffer(buffer, vector3));
 		}
 
 		private void SetupTileHeightFieldTerrain()
@@ -81,8 +81,6 @@ namespace Destiny.Graphics.World
 
 		protected override void DrawSelf(GameTime gameTime)
 		{
-			base.DrawSelf(gameTime);
-
 			Effect.CurrentTechnique = Effect.Techniques["Textured"];
 			Effect.Parameters["xTexture"].SetValue(_textureRock);
 
@@ -91,8 +89,9 @@ namespace Destiny.Graphics.World
 			foreach (EffectPass pass in Effect.CurrentTechnique.Passes)
 			{
 				pass.Apply();
-				Buffers.Draw(gameTime);
-			}
+				base.DrawSelf(gameTime);
+
+}
 		}
 
 	}

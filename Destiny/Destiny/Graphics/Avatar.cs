@@ -19,7 +19,7 @@ namespace Destiny
 		public Avatar(Destiny game)
 			: base(game)
 		{
-			Childs.Add(new Crosshair(game));
+			AddChild(new Crosshair(game));
 		}
 
 		#region Movement
@@ -85,19 +85,32 @@ namespace Destiny
 
 		#endregion Movement
 
+		#region VisualElement
+		protected override void UpdateSelf(GameTime gameTime)
+		{
+			base.UpdateSelf(gameTime);
+			SetPointing();
+		}
+		#endregion VisualElement
+
 		#region Actions
-		public void SetCube(GameTime gameTime, PressedEvent evnt)
+		public void SetMapPoint()
 		{
-			Game.World.Terrain.AddCube(RoundCubeCoordinated(Position+Forward*1.9f));
+			Game.World.Terrain.SetMapPoint(GetPointingLocation());
 		}
-
-		public Vector3 RoundCubeCoordinated(Vector3 v)
-		{
-			return new Vector3((int)v.X, (int)v.Y, (int)v.Z);
-		}
-
-
 		#endregion
+
+		#region Privite
+		private void SetPointing()
+		{
+			Game.World.Terrain.SetPointing(GetPointingLocation());
+		}
+
+		private Vector3 GetPointingLocation()
+		{
+			return Position + Forward * 2.5f;
+		}
+		#endregion Privite
 
 		#region Camera
 		public Vector3 Position

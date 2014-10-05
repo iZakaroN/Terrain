@@ -46,17 +46,37 @@ namespace Destiny.Graphics.World
 			return tiles.ToList().ConvertAll((tileNum) => _terrainTextures[tileNum]);
 		}
 
-		public override void AddCube(Vector3 position)
+		public override void SetMapPoint(Vector3 position)
 		{
 			AddCube(_cube_rock, position);
 		}
-
+		
 		public void AddCube(List<TextureTile> textureSet, Vector3 position, bool addToBuffer = true)
 		{
 			var cube = new Cube(textureSet);
 			var oVector = _dimension.AllocateNode(position, cube);
 			//if (addToBuffer)
-			cube.AddToBuffer(Buffers.GetBuffer(), _dimension.ToWorldVector(oVector));
+			ProcessBuffer((buffer) => cube.AddToBuffer(buffer, _dimension.ToWorldVector(oVector)));
+		}
+
+		Cube PointCube;
+		protected override void HidePointingLocation()
+		{
+			base.HidePointingLocation();
+			if (PointCube != null)
+			{
+				PointCube.RemoveFromBuffer();
+				PointCube = null;
+			}
+		}
+
+		protected override void ShowPointingLocation(Vector3 newPointingLocation)
+		{
+			base.ShowPointingLocation(newPointingLocation);
+			PointCube = new Cube(_cube_rock);
+			var oVector = new OctagonalVector(newPointingLocation);
+			//PointCube.AddToBuffer(Buffers.GetBuffer(), oVector);
+			ProcessBuffer((buffer) => PointCube.AddToBuffer(buffer, oVector));
 		}
 
 		void SetZero()
@@ -161,8 +181,6 @@ namespace Destiny.Graphics.World
 
 		protected override void DrawSelf(GameTime gameTime)
 		{
-			base.DrawSelf(gameTime);
-
 			Effect.CurrentTechnique = Effect.Techniques["Textured"];
 			Effect.Parameters["xTexture"].SetValue(_texture);
 
@@ -171,7 +189,7 @@ namespace Destiny.Graphics.World
 			foreach (EffectPass pass in Effect.CurrentTechnique.Passes)
 			{
 				pass.Apply();
-				Buffers.Draw(gameTime);
+				base.DrawSelf(gameTime);
 			}
 
 			/*Effect.CurrentTechnique = Effect.Techniques["ColoredNoShading"];
