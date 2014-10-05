@@ -15,10 +15,10 @@ namespace Destiny.Graphics.UI
 			: base(game)
 		{
 			Enabled = true;
-            TextureName = @"Texture";
-            FontName = @"Font1";
+			TextureName = @"Texture";
+			FontName = @"Font1";
 			Initialize();
-        }
+		}
 
 		private void Initialize()
 		{
@@ -30,11 +30,11 @@ namespace Destiny.Graphics.UI
 			AddText("Culling: {0}", GetCullEnabled);
 		}
 
-        TimeSpan ElapsedGameTime = TimeSpan.FromSeconds(1);
+		TimeSpan ElapsedGameTime = TimeSpan.FromSeconds(1);
 
-		public override void Draw(GameTime gameTime)
+		protected override void DrawSelf(GameTime gameTime)
 		{
-			base.Draw(gameTime);
+			base.DrawSelf(gameTime);
 			ElapsedGameTime = gameTime.ElapsedGameTime;
 		}
 
@@ -43,25 +43,23 @@ namespace Destiny.Graphics.UI
 			if (ElapsedGameTime.Ticks == 0)
 				return 0;
 			else
-				return TimeSpan.FromSeconds(1).Ticks/ElapsedGameTime.Ticks;
+				return TimeSpan.FromSeconds(1).Ticks / ElapsedGameTime.Ticks;
 		}
 
-        private object GetCullEnabled()
-        {
-            return Game.CullEnabled;
-        }
+		private object GetCullEnabled()
+		{
+			return Game.CullEnabled;
+		}
 
-        private object GetSolidEnabled()
-        {
-            return Game.SolidEnabled;
-        }
+		private object GetSolidEnabled()
+		{
+			return Game.SolidEnabled;
+		}
 
 
 		internal void Debug(string text, params Func<object>[] arguments)
 		{
 			AddText(text, arguments);
-			//UnloadContent();
-			//LoadContent();
 		}
 	}
 }

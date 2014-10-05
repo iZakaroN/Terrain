@@ -61,9 +61,9 @@ namespace Destiny
 			viewMatrix = Matrix.CreateLookAt(Position, Position + Forward, LookUp);
 		}
 
-		public override void Draw(GameTime gameTime)
+		protected override void DrawSelf(GameTime gameTime)
 		{
-			base.Draw(gameTime);
+			base.DrawSelf(gameTime);
 			CalculateView();
 			Effect.Parameters["xView"].SetValue(viewMatrix);
 			Effect.Parameters["xProjection"].SetValue(projectionMatrix);

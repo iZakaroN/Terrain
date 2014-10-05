@@ -79,10 +79,15 @@ namespace Destiny.Graphics.World
 			SetupTileHeightFieldTerrain();
 		}
 
-		public override void Draw(GameTime gameTime)
+		protected override void DrawSelf(GameTime gameTime)
 		{
-			base.Draw(gameTime);
+			base.DrawSelf(gameTime);
+
+			Effect.CurrentTechnique = Effect.Techniques["Textured"];
 			Effect.Parameters["xTexture"].SetValue(_textureRock);
+
+			SetupRasterization();
+
 			foreach (EffectPass pass in Effect.CurrentTechnique.Passes)
 			{
 				pass.Apply();

@@ -24,9 +24,9 @@ namespace Destiny.Graphics
 			_texture = Content.Load<Texture2D>(@"Textures\Crosshair\crosshair1Small3");
 		}
 
-		override public void Draw(GameTime gameTime)
+		protected override void DrawSelf(GameTime gameTime)
 		{
-			base.Draw(gameTime);
+			base.DrawSelf(gameTime);
 			_spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);//, SamplerState.AnisotropicClamp, DepthStencilState.Default, RasterizerState.CullNone);
 			_spriteBatch.Draw(_texture, Position, null, Color.White, 0, Vector2.Zero, SpriteEffects.None, 0);
 			_spriteBatch.End();

@@ -10,28 +10,28 @@ using Destiny.Extensions;
 
 namespace Destiny.Graphics.UI
 {
-    public class TextElement
-    {
-        public string Text;
-        public List<Func<object>> Arguments;
+	public class TextElement
+	{
+		public string Text;
+		public List<Func<object>> Arguments;
 
-        internal string GetFormatedText()
-        {
-            return string.Format(Text, Arguments.ConvertAll((arg) => arg()).ToArray());
-        }
-    }
+		internal string GetFormatedText()
+		{
+			return string.Format(Text, Arguments.ConvertAll((arg) => arg()).ToArray());
+		}
+	}
 
-    public class BaseUI : VisualElement, IDisposable
-    {
+	public class BaseUI : VisualElement, IDisposable
+	{
 		// Manage properties
-        public bool Enabled = true;
+		public bool Enabled = true;
 		public int LineSpace = 0;
 		public Vector2 BorderSpace = new Vector2(10, 5);
 		public Vector2 TextBound;
 
-        SpriteBatch _spriteBatch;
-        Texture2D _backgroundTexture;
-        SpriteFont _font;
+		SpriteBatch _spriteBatch;
+		Texture2D _backgroundTexture;
+		SpriteFont _font;
 		List<TextDrawInfo> _processText;
 
 		protected Vector2 Position = Vector2.Zero;
@@ -39,42 +39,42 @@ namespace Destiny.Graphics.UI
 		protected bool AutoSizeX = true;
 		protected bool AutoSizeY = true;
 
-        protected string TextureName;
-        protected string FontName;
+		protected string TextureName;
+		protected string FontName;
 
-        List<TextElement> _textElements = new List<TextElement>();
+		List<TextElement> _textElements = new List<TextElement>();
 
-        public BaseUI(Destiny game)
-            : base(game)
-        {
-        }
+		public BaseUI(Destiny game)
+			: base(game)
+		{
+		}
 
 		public void Switch()
 		{ Enabled = !Enabled; }
 
 		public void AddText(string text, params Func<object>[] arguments)
-        {
-            _textElements.Add(new TextElement() { Text = text, Arguments = arguments.ToList() });
-        }
+		{
+			_textElements.Add(new TextElement() { Text = text, Arguments = arguments.ToList() });
+		}
 
-        public void ClearText()
-        {
-            _textElements.Clear();
-        }
+		public void ClearText()
+		{
+			_textElements.Clear();
+		}
 
 		override public void LoadContent()
 		{
 			base.LoadContent();
 			_spriteBatch = new SpriteBatch(Device);
-            if (FontName != null)
-                _font = Content.Load<SpriteFont>(FontName);
-            if (TextureName != null)
-                _backgroundTexture = Content.Load<Texture2D>(TextureName);
-        }
+			if (FontName != null)
+				_font = Content.Load<SpriteFont>(FontName);
+			if (TextureName != null)
+				_backgroundTexture = Content.Load<Texture2D>(TextureName);
+		}
 
-		public override void Update(GameTime gameTime)
+		protected override void UpdateSelf(GameTime gameTime)
 		{
-			base.Update(gameTime);
+			base.UpdateSelf(gameTime);
 			if (Enabled)
 			{
 				ProcessText();
@@ -88,9 +88,9 @@ namespace Destiny.Graphics.UI
 			}
 		}
 
-		public override void Draw(GameTime gameTime)
+		protected override void DrawSelf(GameTime gameTime)
 		{
-			base.Draw(gameTime);
+			base.DrawSelf(gameTime);
 			if (Enabled)
 			{
 				_spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
@@ -102,38 +102,38 @@ namespace Destiny.Graphics.UI
 					DrawText(_spriteBatch);
 				_spriteBatch.End();
 			}
-        }
+		}
 
-        private void DrawBackground(SpriteBatch spriteBatch)
-        {
-            int x = 0;
-            int width = _backgroundTexture.Width;
-            bool flipX = false;
+		private void DrawBackground(SpriteBatch spriteBatch)
+		{
+			int x = 0;
+			int width = _backgroundTexture.Width;
+			bool flipX = false;
 
-            while (x < Size.X)
-            {
-                if ((x + width) > Size.X) 
+			while (x < Size.X)
+			{
+				if ((x + width) > Size.X)
 					width = (int)Size.X - x;
 
-                int y = 0;
-                int height = _backgroundTexture.Height;
-                bool flipY = false;
+				int y = 0;
+				int height = _backgroundTexture.Height;
+				bool flipY = false;
 
-                while (y < Size.Y)
-                {
-                    if ((y + height) > Size.Y) 
+				while (y < Size.Y)
+				{
+					if ((y + height) > Size.Y)
 						height = (int)Size.Y - y;
 					var destRect = new Rectangle((int)(x + Position.X), (int)(y + Position.Y), width, height);
 					var srcRect = new Rectangle(flipX ? (_backgroundTexture.Width - width) : 0, flipY ? (_backgroundTexture.Height - height) : 0, width, height);
 					var effects = (flipX ? SpriteEffects.FlipHorizontally : SpriteEffects.None) | (flipY ? SpriteEffects.FlipVertically : SpriteEffects.None);
 					spriteBatch.Draw(_backgroundTexture, destRect, srcRect, Color.White, 0, Vector2.Zero, effects, 0);
-                    y += height;
-                    flipY = !flipY;
-                }
-                x += width;
-                flipX = !flipX;
-            }
-        }
+					y += height;
+					flipY = !flipY;
+				}
+				x += width;
+				flipX = !flipX;
+			}
+		}
 
 		struct TextDrawInfo
 		{
@@ -167,12 +167,12 @@ namespace Destiny.Graphics.UI
 		}
 
 		private void DrawText(SpriteBatch spriteBatch)
-        {
-            _processText.ForEach((element) =>
-                {
+		{
+			_processText.ForEach((element) =>
+				{
 					spriteBatch.DrawString(_font, element.FormatedText, Position + element.Position, Color.White);
-                });
-        }
+				});
+		}
 
 
 		public override void UnloadContent()
@@ -181,5 +181,5 @@ namespace Destiny.Graphics.UI
 			if (_spriteBatch != null) _spriteBatch.Dispose();
 			if (_backgroundTexture != null) _backgroundTexture.Dispose();
 		}
-    }
+	}
 }

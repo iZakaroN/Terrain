@@ -205,18 +205,21 @@ namespace Destiny.Graphics.World
 			return UsedRegions.BinarySearch(region, region);
 		}
 
-		public int RegionCount {
+		public int RegionCount
+		{
 			get { return UsedRegions.Count; }
 		}
 
-		public int FreePolygons { 
-			get { 
-				return UsedRegions.Aggregate(MaxPolygonCount, (maxPolygons, region) => maxPolygons - region.Count); 
-			} 
+		public int FreePolygons
+		{
+			get
+			{
+				return UsedRegions.Aggregate(MaxPolygonCount, (maxPolygons, region) => maxPolygons - region.Count);
+			}
 		}
 
 
-		public bool IsFull { get { return UsedRegions.Count ==1 /*> 0*/ && UsedRegions.Last().High >= MaxPolygonCount; } }
+		public bool IsFull { get { return UsedRegions.Count == 1 /*> 0*/ && UsedRegions.Last().High >= MaxPolygonCount; } }
 
 		VertexDeclaration VertexDeclaration
 		{
@@ -235,9 +238,9 @@ namespace Destiny.Graphics.World
 			_indexBuffer.SetData(Indices, 0, indexCount);
 		}
 
-		public override void Draw(GameTime gameTime)
+		protected override void DrawSelf(GameTime gameTime)
 		{
-			base.Draw(gameTime);
+			base.DrawSelf(gameTime);
 			bool buffered = Buffered;
 			if (buffered)
 			{

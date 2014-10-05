@@ -18,7 +18,8 @@ namespace Destiny.Graphics.World
 
 		bool cubicTerrain = true;
 
-		public World(Destiny game) : base(game)
+		public World(Destiny game)
+			: base(game)
 		{
 
 			UI = new MainUI(game);
@@ -72,11 +73,11 @@ namespace Destiny.Graphics.World
 			cubicTerrain = !cubicTerrain;
 			SetActiveTerrain();
 		}
-		
-		public override void Draw(GameTime gameTime)
+
+		protected override void DrawSelf(GameTime gameTime)
 		{
-			base.Draw(gameTime);
+			base.DrawSelf(gameTime);
 			Terrain.Draw(gameTime);
 		}
-    }
+	}
 }

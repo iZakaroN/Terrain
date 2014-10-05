@@ -38,7 +38,7 @@ namespace Destiny.Graphics.World
 
 		public TerrainCube(Destiny game)
 			: base(game, new GeometryBuffers<CubeBuffer>(game, new CubeBufferFactory()))
-        {
+		{
 		}
 
 		List<TextureTile> GetTileSet(params int[] tiles)
@@ -56,7 +56,7 @@ namespace Destiny.Graphics.World
 			var cube = new Cube(textureSet);
 			var oVector = _dimension.AllocateNode(position, cube);
 			//if (addToBuffer)
-				cube.AddToBuffer(Buffers.GetBuffer(), _dimension.ToWorldVector(oVector));
+			cube.AddToBuffer(Buffers.GetBuffer(), _dimension.ToWorldVector(oVector));
 		}
 
 		void SetZero()
@@ -159,16 +159,15 @@ namespace Destiny.Graphics.World
 			SetupCubeHeightFieldTerrain();
 		}
 
-		public override void Draw(GameTime gameTime)
+		protected override void DrawSelf(GameTime gameTime)
 		{
-			base.Draw(gameTime);
-			Game.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
-			RasterizerState rs = new RasterizerState();
-			rs.CullMode = Game.CullEnabled ? CullMode.CullCounterClockwiseFace : CullMode.None;
-			rs.FillMode = Game.SolidEnabled ? FillMode.Solid : FillMode.WireFrame;
-			Game.GraphicsDevice.RasterizerState = rs;
+			base.DrawSelf(gameTime);
 
+			Effect.CurrentTechnique = Effect.Techniques["Textured"];
 			Effect.Parameters["xTexture"].SetValue(_texture);
+
+			SetupRasterization();
+
 			foreach (EffectPass pass in Effect.CurrentTechnique.Passes)
 			{
 				pass.Apply();

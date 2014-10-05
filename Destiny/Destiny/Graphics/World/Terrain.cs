@@ -29,6 +29,17 @@ namespace Destiny
 		{
 		}
 
+		protected void SetupRasterization()
+		{
+			Game.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+			Game.GraphicsDevice.RasterizerState = new RasterizerState()
+			{
+				CullMode = Game.CullEnabled ? CullMode.CullCounterClockwiseFace : CullMode.None,
+				FillMode = Game.SolidEnabled ? FillMode.Solid : FillMode.WireFrame,
+			};
+		}
+
+
 
 	}
 	abstract public class Terrain<B> : Terrain

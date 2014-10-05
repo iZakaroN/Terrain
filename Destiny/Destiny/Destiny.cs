@@ -132,19 +132,11 @@ namespace Destiny
 		{
 			graphics.GraphicsDevice.Clear(Color.Black);
 
-			Effect.CurrentTechnique = Effect.Techniques["Textured"];
 			//			Effect.CurrentTechnique = Effect.Techniques["ColoredNoShading"];
 			//Camera.Draw(gameTime);
 			SetupLightning();
-			this.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
-			RasterizerState rs = new RasterizerState();
-			rs.CullMode = CullEnabled ? CullMode.CullCounterClockwiseFace : CullMode.None;
-			rs.FillMode = SolidEnabled ? FillMode.Solid : FillMode.WireFrame;
-			GraphicsDevice.RasterizerState = rs;
 
 			_visualObjects.ForEach(vo => vo.Draw(gameTime));
-
-
 
 			base.Draw(gameTime);
 		}

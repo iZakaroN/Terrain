@@ -141,7 +141,6 @@
     <Compile Include="Graphics\World\Square\Mesh\Tile.cs" />
     <Compile Include="Graphics\World\Square\Mesh\TileBuffer.cs" />
     <Compile Include="Graphics\World\Square\Mesh\TileBufferFactory.cs" />
-    <Compile Include="Graphics\World\Terrain_old.cs" />
     <Compile Include="Graphics\World\Octagonal\Mesh\Cube.cs" />
     <Compile Include="Graphics\World\Octagonal\Mesh\CubeFace.cs" />
     <Compile Include="Graphics\CubicVector.cs" />
