@@ -40,7 +40,10 @@ namespace Destiny.Graphics.UI
 
 		private object GetFPS()
 		{
-			return TimeSpan.FromSeconds(1).Ticks/ElapsedGameTime.Ticks;
+			if (ElapsedGameTime.Ticks == 0)
+				return 0;
+			else
+				return TimeSpan.FromSeconds(1).Ticks/ElapsedGameTime.Ticks;
 		}
 
         private object GetCullEnabled()
