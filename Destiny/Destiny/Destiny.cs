@@ -76,7 +76,7 @@ namespace Destiny
 			this.graphics.PreferredBackBufferHeight = 900;
 			this.graphics.IsFullScreen = true;
 
-			Device.SamplerStates[0] = new SamplerState() { Filter = TextureFilter.PointMipLinear, MipMapLevelOfDetailBias = 2, MaxAnisotropy = 4, MaxMipLevel = 8 };
+			Device.SamplerStates[0] = new SamplerState() { Filter = TextureFilter.Linear, MipMapLevelOfDetailBias = 0, MaxAnisotropy = 4, MaxMipLevel = 0 };
 			graphics.ApplyChanges();
 			Camera = new Camera(this);
 			World = new World(this);
@@ -135,14 +135,8 @@ namespace Destiny
 			Effect.CurrentTechnique = Effect.Techniques["Textured"];
 			//			Effect.CurrentTechnique = Effect.Techniques["ColoredNoShading"];
 			//Camera.Draw(gameTime);
-			Effect.Parameters["xEnableLighting"].SetValue(true);
-			//Effect.Parameters["sampler"].SetValue( = SamplerState.PointClamp;
-			Vector3 lightDirection = new Vector3(-10f, -10f, -10f);
-			lightDirection.Normalize();
-			Effect.Parameters["xLightDirection"].SetValue(lightDirection);
-			Effect.Parameters["xAmbient"].SetValue(0.5f);
+			SetupLightning();
 			this.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
-
 			RasterizerState rs = new RasterizerState();
 			rs.CullMode = CullEnabled ? CullMode.CullCounterClockwiseFace : CullMode.None;
 			rs.FillMode = SolidEnabled ? FillMode.Solid : FillMode.WireFrame;
@@ -153,6 +147,16 @@ namespace Destiny
 
 
 			base.Draw(gameTime);
+		}
+
+		private void SetupLightning()
+		{
+			Effect.Parameters["xEnableLighting"].SetValue(true);
+			//Effect.Parameters["sampler"].SetValue( = SamplerState.PointClamp;
+			Vector3 lightDirection = new Vector3(-10f, -10f, -10f);
+			lightDirection.Normalize();
+			Effect.Parameters["xLightDirection"].SetValue(lightDirection);
+			Effect.Parameters["xAmbient"].SetValue(0.5f);
 		}
 
 		public void SwitchSolid()

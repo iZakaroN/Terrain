@@ -162,6 +162,12 @@ namespace Destiny.Graphics.World
 		public override void Draw(GameTime gameTime)
 		{
 			base.Draw(gameTime);
+			Game.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+			RasterizerState rs = new RasterizerState();
+			rs.CullMode = Game.CullEnabled ? CullMode.CullCounterClockwiseFace : CullMode.None;
+			rs.FillMode = Game.SolidEnabled ? FillMode.Solid : FillMode.WireFrame;
+			Game.GraphicsDevice.RasterizerState = rs;
+
 			Effect.Parameters["xTexture"].SetValue(_texture);
 			foreach (EffectPass pass in Effect.CurrentTechnique.Passes)
 			{

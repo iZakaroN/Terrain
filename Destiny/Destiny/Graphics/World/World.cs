@@ -16,7 +16,7 @@ namespace Destiny.Graphics.World
 		public MainUI UI;
 		public Avatar Avatar;
 
-		bool cubicTerrain = false;
+		bool cubicTerrain = true;
 
 		public World(Destiny game) : base(game)
 		{
@@ -75,8 +75,8 @@ namespace Destiny.Graphics.World
 		
 		public override void Draw(GameTime gameTime)
 		{
-			Terrain.Draw(gameTime);
 			base.Draw(gameTime);
+			Terrain.Draw(gameTime);
 		}
     }
 }
